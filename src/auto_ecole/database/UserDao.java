@@ -14,14 +14,14 @@ public class UserDao {
 
     // Method to find a user by username
     public User findByUsername(String username) throws SQLException {
-        String query = "SELECT * FROM user WHERE username = ?";
+        String query = "SELECT * FROM Eleve WHERE nom = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, username);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     String foundUsername = resultSet.getString("username");
                     String password = resultSet.getString("password");
-                    return new User(foundUsername, password);
+                    return new User();
                 }
             }
         }
@@ -31,13 +31,13 @@ public class UserDao {
     // Method to retrieve all users
     public List<User> getAll() throws SQLException {
         List<User> userList = new ArrayList<>();
-        String query = "SELECT * FROM user";
+        String query = "SELECT * FROM Eleve";
         try (PreparedStatement statement = connection.prepareStatement(query);
                 ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
-                String foundUsername = resultSet.getString("username");
-                String password = resultSet.getString("password");
-                userList.add(new User(foundUsername, password));
+                String foundUsername = resultSet.getString("nom");
+                String password = resultSet.getString("prenom");
+                userList.add(new User(1,foundUsername,password,null,null));
             }
         }
         return userList;

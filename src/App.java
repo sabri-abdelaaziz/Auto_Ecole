@@ -13,7 +13,7 @@ public class App {
             List<User> userList = userDao.getAll();
             if (userList != null) {
                 for (User user : userList) {
-                    System.out.println(user.getUsername());
+                    System.out.println(user.getNom());
                 }
             } else {
                 System.out.println("User not found");
