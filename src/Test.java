@@ -18,7 +18,7 @@ import java.util.List;
 public class Test {
     
   public Test(){
-          String username = "admin";
+        String username = "admin";
         String password = "123";
         try (Connection connection = DatabaseConnector.connect()) {
             UserDao userDao = new UserDao(connection);

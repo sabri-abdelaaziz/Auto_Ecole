@@ -25,18 +25,20 @@ import javax.swing.JPasswordField;
 import javax.swing.SwingUtilities;
 
 public class App  extends JFrame implements ActionListener{
-      private JLabel passText;
+    private JLabel passText;
     private JPanel mainPanel;
     private JPasswordField passwordField;
     private JButton verifyButton;
     private static final String CONSTANT_PASSWORD = "password123";
 
+ 
     
     public App(){
+        
        // Create a JPanel with BoxLayout
         mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        mainPanel.setMaximumSize(new Dimension(300, 70)); // Set maximum size
+        //mainPanel.setMaximumSize(new Dimension(300, 70)); // Set maximum size
 
         // Set background color
         mainPanel.setBackground(Color.WHITE);
@@ -99,7 +101,7 @@ public class App  extends JFrame implements ActionListener{
                    JLabel successLabel = new JLabel("Password Verified");
                    // Create a custom JPanel for the success message
                     JPanel successPanel = new JPanel();
-                   successPanel.setLayout(new BorderLayout());
+                    successPanel.setLayout(new BorderLayout());
                     successLabel.setForeground(Color.GREEN); // Set text color to white
                     successLabel.setHorizontalAlignment(JLabel.CENTER); // Center-align the text
                     successLabel.setFont(new Font("Arial", Font.BOLD, 26)); // Set font and style
@@ -110,14 +112,17 @@ public class App  extends JFrame implements ActionListener{
                     // Show the custom success message panel
                     JOptionPane.showMessageDialog(null, successPanel, "Success", JOptionPane.PLAIN_MESSAGE);
                     new Home().setVisible(true);
-                                        setVisible(false);
+                    setVisible(false);
+                     
+                
+            
                 } else {
                     JOptionPane.showMessageDialog(null, "Incorrect Password", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
   // Add components to mainPanel
-            mainPanel.add(Box.createVerticalStrut(50)); 
+        mainPanel.add(Box.createVerticalStrut(50)); 
         mainPanel.add(enterPasswordLabel);
         
         mainPanel.add(Box.createRigidArea(new Dimension(0, 22)));
@@ -130,7 +135,7 @@ public class App  extends JFrame implements ActionListener{
         // Make the JFrame visible
         setVisible(true);
         
-           // this is the constates patames for all JFRAMES in our project check it to see what is there
+        // this is the constates patames for all JFRAMES in our project check it to see what is there
         new FrameConstantes(this,"Login Page");
      
       
@@ -158,6 +163,7 @@ public class App  extends JFrame implements ActionListener{
                 new App().setVisible(true);
             }
         });
+    
     
     }
 }
