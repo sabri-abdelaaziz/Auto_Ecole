@@ -40,15 +40,36 @@ public class NavBar extends JPanel {
             button.setBackground(new Color(0, 100, 0));
             button.setForeground(Color.WHITE);
             button.setPreferredSize(new Dimension(200, 40));
-            button.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    // When a button is clicked, notify the listener
-                    if (listener != null) {
-                        listener.titleClicked(title);
-                    }
-                }
-            });
+            
+          
+            
+    button.setOpaque(true); // Set the button to be opaque
+
+button.addMouseListener(new MouseAdapter() {
+    @Override
+    public void mousePressed(MouseEvent e) {
+        button.setBackground(new Color(10, 100, 10)); // Change background color when mouse is pressed
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        button.setBackground(new Color(0, 100, 0)); // Restore default background color when mouse is released
+    }
+});
+
+button.addActionListener(new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        button.setBackground(new Color(0, 100, 0)); // Restore default background color when clicked
+
+        // When a button is clicked, notify the listener
+        if (listener != null) {
+            listener.titleClicked(title);
+        }
+    }
+});
+
+            
             menuPanel.add(button);
         }
 

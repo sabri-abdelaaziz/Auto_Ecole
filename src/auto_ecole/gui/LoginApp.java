@@ -61,9 +61,7 @@ public class LoginApp  extends JFrame implements ActionListener{
         verifyButton = new JButton("Verify");
         verifyButton.setMaximumSize(new Dimension(200, 50)); // Set maximum size
         verifyButton.setFont(new Font("Arial", Font.PLAIN, 16)); // Set font
-        verifyButton.setBackground(Color.GREEN); // Set background color
-        verifyButton.setForeground(Color.BLUE); // Set foreground color
-    
+        verifyButton.setBackground(new Color(0, 100, 0)); // Set background color
 
         // Align components horizontally at the center
         enterPasswordLabel.setAlignmentX(Component.CENTER_ALIGNMENT);

@@ -1,6 +1,7 @@
 package auto_ecole.gui;
 
 
+import auto_ecole.Constants.FrameConstantes;
 import java.awt.*;
 import javax.swing.*;
 
@@ -15,9 +16,12 @@ import javax.swing.*;
  */
 public class Home extends JFrame implements NavBarListener{
     private final NavBar navBar;
-    private JPanel centerPanel;
+    private JPanel centerPanel;    
+    private JPanel headerPanel;
+
 
     public Home() {
+        
         setTitle("Home");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
@@ -29,10 +33,12 @@ public class Home extends JFrame implements NavBarListener{
         // Create the initial center panel
         centerPanel = new AccueilPanel();
         add(centerPanel, BorderLayout.CENTER);
-             
+        headerPanel=new Header(); 
+        add(headerPanel,BorderLayout.NORTH);
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
+        new FrameConstantes(this,"Home");
     }
 
      // Implementing the method from NavBarListener interface
