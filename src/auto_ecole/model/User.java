@@ -9,12 +9,16 @@ private String prenom;
 private String adresse;	
 private String telephone;
 
- public User() {
+ public User() {}
+public User( String nom, String prenom, String adresse, String telephone) {
+        this.nom = nom;
+        this.prenom = prenom;
+        this.adresse = adresse;
+        this.telephone = telephone;
     }
-
     // Constructeur avec paramètres
     public User(int id, String nom, String prenom, String adresse, String telephone) {
-        this.id = id;
+        this.id =id;
         this.nom = nom;
         this.prenom = prenom;
         this.adresse = adresse;
@@ -71,14 +75,5 @@ private String telephone;
     public void setTelephone(String telephone) {
         this.telephone = telephone;
     }
-
-    public String getUsername() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public String getPassword() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
 
 }

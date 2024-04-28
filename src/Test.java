@@ -17,11 +17,8 @@ import java.util.List;
  */
 public class Test {
     
-  public Test(){
-        String username = "admin";
-        String password = "123";
-        try (Connection connection = DatabaseConnector.connect()) {
-            UserDao userDao = new UserDao(connection);
+  public Test() throws SQLException{
+            UserDao userDao = new UserDao();
             List<User> userList = userDao.getAll();
             if (userList != null) {
                 for (User user : userList) {
@@ -30,9 +27,7 @@ public class Test {
             } else {
                 System.out.println("User not found");
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+     
          
 }
   public static void main(String[] args) throws Exception {

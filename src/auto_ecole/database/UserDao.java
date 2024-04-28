@@ -8,8 +8,8 @@ import auto_ecole.model.User;
 public class UserDao {
     private Connection connection;
 
-    public UserDao(Connection connection) {
-        this.connection = connection;
+    public UserDao() throws SQLException {
+        this.connection  = DatabaseConnector.connect();
     }
 
     // Method to find a user by username
@@ -17,11 +17,14 @@ public class UserDao {
         String query = "SELECT * FROM Eleve WHERE nom = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, username);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    String foundUsername = resultSet.getString("username");
-                    String password = resultSet.getString("password");
-                    return new User();
+            try (ResultSet res = statement.executeQuery()) {
+                if (res.next()) {
+                int id = res.getByte("id");
+                String nom = res.getString("nom");
+                String prenom = res.getString("prenom");
+                String adresse = res.getString("adresse");
+                String telephone = res.getString("telephone");
+                return new User(id,nom,prenom,adresse,telephone);
                 }
             }
         }
@@ -33,11 +36,14 @@ public class UserDao {
         List<User> userList = new ArrayList<>();
         String query = "SELECT * FROM Eleve";
         try (PreparedStatement statement = connection.prepareStatement(query);
-                ResultSet resultSet = statement.executeQuery()) {
-            while (resultSet.next()) {
-                String foundUsername = resultSet.getString("nom");
-                String password = resultSet.getString("prenom");
-                userList.add(new User(1,foundUsername,password,null,null));
+                ResultSet res = statement.executeQuery()) {
+            while (res.next()) {
+                int id = res.getByte("id");
+                String nom = res.getString("nom");
+                String prenom = res.getString("prenom");
+                String adresse = res.getString("adresse");
+                String telephone = res.getString("telephone");
+                userList.add(new User(id,nom,prenom,adresse,telephone));
             }
         }
         return userList;
@@ -45,11 +51,16 @@ public class UserDao {
 
     // Method to save a new user
     public void save(User user) throws SQLException {
-        String query = "INSERT INTO user (username, password) VALUES (?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, user.getUsername());
-            statement.setString(2, user.getPassword());
-            statement.executeUpdate();
-        }
+    String query = "INSERT INTO Eleve (id, nom, prenom, adresse, telephone) VALUES (?, ?, ?, ?, ?)";
+    try (PreparedStatement statement = connection.prepareStatement(query)) {
+        statement.setInt(1, user.getId());
+        statement.setString(2, user.getNom());
+        statement.setString(3, user.getPrenom());
+        statement.setString(4, user.getAdresse());
+        statement.setString(5, user.getTelephone());
+
+        statement.executeUpdate();
     }
+}
+
 }
