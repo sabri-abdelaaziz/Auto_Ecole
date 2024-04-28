@@ -33,5 +33,9 @@ public class Test {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    
-}}
+         
+}
+  public static void main(String[] args) throws Exception {
+                new Test();
+    }
+}
