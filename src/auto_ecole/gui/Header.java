@@ -34,7 +34,7 @@ public class Header extends JPanel {
         welcomeLabel = new JLabel("AUTO ECOLE!");
         welcomeLabel.setFont(new Font("Arial", Font.PLAIN, 22));
        
-        welcomeLabel.setForeground(Color.red);
+        welcomeLabel.setForeground(Color.white);
         welcomeLabel.setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
            welcomeLabel.setHorizontalAlignment(SwingConstants.CENTER); // Set text alignment to center
       
@@ -44,7 +44,7 @@ public class Header extends JPanel {
         timeLabel = new JLabel();
         updateTime();
         timeLabel.setFont(new Font("Arial", Font.PLAIN, 22));
-        timeLabel.setForeground(Color.red);
+        timeLabel.setForeground(Color.white);
         timeLabel.setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
         add(timeLabel, BorderLayout.EAST);
 
