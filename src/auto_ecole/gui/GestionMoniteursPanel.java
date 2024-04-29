@@ -37,12 +37,8 @@ public class GestionMoniteursPanel extends JPanel {
 
         //top panel 
         JPanel northPanel=new JPanel();
-        
-        
-        
-        
-         northPanel.setLayout(new BorderLayout());
-       northPanel.setBackground(new Color(255, 255, 255));
+        northPanel.setLayout(new BorderLayout());
+        northPanel.setBackground(new Color(255, 255, 255));
        
          try {
             MoniteurDao = new MoniteursDao();
@@ -66,7 +62,7 @@ public class GestionMoniteursPanel extends JPanel {
        
         welcomeLabel.setForeground(Color.red);
         welcomeLabel.setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
-           welcomeLabel.setHorizontalAlignment(SwingConstants.CENTER); // Set text alignment to center
+        welcomeLabel.setHorizontalAlignment(SwingConstants.CENTER); // Set text alignment to center
       
         northPanel.add(welcomeLabel, BorderLayout.CENTER);
 
