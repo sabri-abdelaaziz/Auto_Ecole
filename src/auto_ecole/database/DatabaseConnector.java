@@ -3,7 +3,7 @@ package auto_ecole.database;
 import java.sql.*;
 
 public class DatabaseConnector {
-    private static final String URL = "jdbc:mysql://localhost:3306/auto_ecole";
+    private static final String URL = "jdbc:mysql://localhost:3305/auto_ecole";
     private static final String USERNAME = "adia";
     private static final String PASSWORD = "adia";
 

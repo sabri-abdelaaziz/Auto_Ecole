@@ -1,21 +1,77 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package auto_ecole.model;
-
-/**
- *
- * @author Abdellatif
- */
-import java.sql.Date;
 
 public class Cours {
     private int id;
-    private Date dateDebut;
-    private Date dateFin;
+    private String titre;
+    private String dateDebut;
+    private String dateFin;
     private String heureDebut;
     private String heureFin;
     private int vehiculeId;
 
+    public Cours(int id, String titre, String dateDebut, String dateFin, String heureDebut, String heureFin, int vehiculeId) {
+        this.id = id;
+        this.titre = titre;
+        this.dateDebut = dateDebut;
+        this.dateFin = dateFin;
+        this.heureDebut = heureDebut;
+        this.heureFin = heureFin;
+        this.vehiculeId = vehiculeId;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getTitre() {
+        return titre;
+    }
+
+    public void setTitre(String titre) {
+        this.titre = titre;
+    }
+
+    public String getDateDebut() {
+        return dateDebut;
+    }
+
+    public void setDateDebut(String dateDebut) {
+        this.dateDebut = dateDebut;
+    }
+
+    public String getDateFin() {
+        return dateFin;
+    }
+
+    public void setDateFin(String dateFin) {
+        this.dateFin = dateFin;
+    }
+
+    public String getHeureDebut() {
+        return heureDebut;
+    }
+
+    public void setHeureDebut(String heureDebut) {
+        this.heureDebut = heureDebut;
+    }
+
+    public String getHeureFin() {
+        return heureFin;
+    }
+
+    public void setHeureFin(String heureFin) {
+        this.heureFin = heureFin;
+    }
+
+    public int getVehiculeId() {
+        return vehiculeId;
+    }
+
+    public void setVehiculeId(int vehiculeId) {
+        this.vehiculeId = vehiculeId;
+    }
 }

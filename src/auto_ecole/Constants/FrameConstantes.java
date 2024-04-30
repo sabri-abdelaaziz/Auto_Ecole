@@ -13,7 +13,9 @@ import javax.swing.JFrame;
  * @author air
  */
 public class FrameConstantes {
+    JFrame frame;
     public FrameConstantes(JFrame j,String Title ){
+        frame=j;
         // add title to frame
         j.setTitle(Title);
         // set the size width and height 
@@ -30,6 +32,9 @@ public class FrameConstantes {
        
         j.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         j.setLocationRelativeTo(null);
-        j.setVisible(true);
+       
+    }
+    public void setVisible(){
+        frame.setVisible(true);
     }
 }

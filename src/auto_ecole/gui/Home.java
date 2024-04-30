@@ -1,19 +1,17 @@
 package auto_ecole.gui;
 
-
 import auto_ecole.Constants.FrameConstantes;
-import java.awt.*;
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import javax.swing.BorderFactory;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 
-/**
- *
- * @author HP
- */
+
+
 public class Home extends JFrame implements NavBarListener{
     private final NavBar navBar;
     private JPanel centerPanel;    
@@ -38,7 +36,8 @@ public class Home extends JFrame implements NavBarListener{
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
-        new FrameConstantes(this,"Home");
+        FrameConstantes frameConstantes = new FrameConstantes(this,"Home");
+        frameConstantes.setVisible();
     }
 
      // Implementing the method from NavBarListener interface

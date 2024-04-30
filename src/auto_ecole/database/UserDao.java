@@ -45,7 +45,7 @@ public int calculCandidats() {
     }
     
     // Method to find a user by username
-    public User findName(String name) throws SQLException {
+    public User getUserByName(String name) throws SQLException {
         String query = "SELECT * FROM Eleve WHERE nom = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, name);
