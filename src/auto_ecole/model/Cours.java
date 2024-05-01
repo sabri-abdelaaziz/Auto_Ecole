@@ -1,15 +1,26 @@
 package auto_ecole.model;
 
+import java.util.*;
+
 public class Cours {
     private int id;
     private String titre;
-    private String dateDebut;
-    private String dateFin;
+    private Date dateDebut;
+    private Date dateFin;
     private String heureDebut;
     private String heureFin;
     private int vehiculeId;
+    
+    public Cours(String titre, Date dateDebut, Date dateFin, String heureDebut, String heureFin, int vehiculeId) {
+        this.titre = titre;
+        this.dateDebut = dateDebut;
+        this.dateFin = dateFin;
+        this.heureDebut = heureDebut;
+        this.heureFin = heureFin;
+        this.vehiculeId = vehiculeId;
+    }
 
-    public Cours(int id, String titre, String dateDebut, String dateFin, String heureDebut, String heureFin, int vehiculeId) {
+    public Cours(int id, String titre, Date dateDebut, Date dateFin, String heureDebut, String heureFin, int vehiculeId) {
         this.id = id;
         this.titre = titre;
         this.dateDebut = dateDebut;
@@ -35,19 +46,19 @@ public class Cours {
         this.titre = titre;
     }
 
-    public String getDateDebut() {
+    public Date getDateDebut() {
         return dateDebut;
     }
 
-    public void setDateDebut(String dateDebut) {
+    public void setDateDebut(Date dateDebut) {
         this.dateDebut = dateDebut;
     }
 
-    public String getDateFin() {
+    public Date getDateFin() {
         return dateFin;
     }
 
-    public void setDateFin(String dateFin) {
+    public void setDateFin(Date dateFin) {
         this.dateFin = dateFin;
     }
 
