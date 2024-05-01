@@ -38,6 +38,11 @@ public class Home extends JFrame implements NavBarListener{
         setVisible(true);
         FrameConstantes frameConstantes = new FrameConstantes(this,"Home");
         frameConstantes.setVisible();
+<<<<<<< HEAD
+=======
+        
+       
+>>>>>>> b2d697c (Rapport du projet & Gestion des examens)
     }
 
      // Implementing the method from NavBarListener interface
@@ -65,7 +70,11 @@ public void titleClicked(String title) {
             newCenterPanel = new GestionCoursPanel();
             break;
         case "Gestion Examens":
+<<<<<<< HEAD
             newCenterPanel = new GestionExamensPanel();
+=======
+            newCenterPanel = new GestionExamensPanel(); // Crée une nouvelle instance de GestionExamensPanel
+>>>>>>> b2d697c (Rapport du projet & Gestion des examens)
             break;
         case "Gestion Factures":
             newCenterPanel = new GestionFacturesPanel();

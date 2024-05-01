@@ -1,5 +1,6 @@
 package auto_ecole.model;
 
+<<<<<<< HEAD
 import java.util.*;
 
 public class Cours {
@@ -21,6 +22,18 @@ public class Cours {
     }
 
     public Cours(int id, String titre, Date dateDebut, Date dateFin, String heureDebut, String heureFin, int vehiculeId) {
+=======
+public class Cours {
+    private int id;
+    private String titre;
+    private String dateDebut;
+    private String dateFin;
+    private String heureDebut;
+    private String heureFin;
+    private int vehiculeId;
+
+    public Cours(int id, String titre, String dateDebut, String dateFin, String heureDebut, String heureFin, int vehiculeId) {
+>>>>>>> b2d697c (Rapport du projet & Gestion des examens)
         this.id = id;
         this.titre = titre;
         this.dateDebut = dateDebut;
@@ -46,6 +59,7 @@ public class Cours {
         this.titre = titre;
     }
 
+<<<<<<< HEAD
     public Date getDateDebut() {
         return dateDebut;
     }
@@ -59,6 +73,21 @@ public class Cours {
     }
 
     public void setDateFin(Date dateFin) {
+=======
+    public String getDateDebut() {
+        return dateDebut;
+    }
+
+    public void setDateDebut(String dateDebut) {
+        this.dateDebut = dateDebut;
+    }
+
+    public String getDateFin() {
+        return dateFin;
+    }
+
+    public void setDateFin(String dateFin) {
+>>>>>>> b2d697c (Rapport du projet & Gestion des examens)
         this.dateFin = dateFin;
     }
 

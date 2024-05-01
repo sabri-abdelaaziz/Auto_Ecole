@@ -61,7 +61,11 @@ public class Header extends JPanel {
     }
 
     public static void main(String[] args) {
+<<<<<<< HEAD
         JFrame frame = new JFrame("Header Example");
+=======
+        JFrame frame = new JFrame("Header");
+>>>>>>> b2d697c (Rapport du projet & Gestion des examens)
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(600, 60); // Adjusted height
 

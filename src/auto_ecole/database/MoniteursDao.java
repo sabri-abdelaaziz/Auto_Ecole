@@ -90,5 +90,44 @@ public class MoniteursDao {
     }
 }
 
+<<<<<<< HEAD
 
+=======
+    // Méthode pour récupérer tous les ID des moniteurs depuis la base de données
+    public List<String> getAllInstructorIds() throws SQLException {
+        List<String> instructorIds = new ArrayList<>();
+        String query = "SELECT id FROM moniteur";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    String instructorId = resultSet.getString("id");
+                    instructorIds.add(instructorId);
+                }
+            }
+        }
+
+        return instructorIds;
+    }
+
+    // Méthode pour récupérer un moniteur par son ID
+    public Moniteur getById(int id) throws SQLException {
+        Moniteur moniteur = null;
+        String query = "SELECT * FROM instructeur WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    // Construire l'objet Moniteur à partir des données récupérées
+                    moniteur = new Moniteur();
+                    moniteur.setId(resultSet.getInt("id"));
+                    moniteur.setNom(resultSet.getString("nom"));
+                    moniteur.setPrenom(resultSet.getString("prenom"));
+                    
+                }
+            }
+        }
+        return moniteur;
+    }
+>>>>>>> b2d697c (Rapport du projet & Gestion des examens)
 }

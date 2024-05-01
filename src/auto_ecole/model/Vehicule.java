@@ -70,7 +70,11 @@ public class Vehicule {
     public void setAnneeFabrication(int anneeFabrication) {
         this.anneeFabrication = anneeFabrication;
     }
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> b2d697c (Rapport du projet & Gestion des examens)
     
 }
 
