@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VehiculeDao {
-<<<<<<< HEAD
+
 
     private Connection connection;
 
@@ -34,12 +34,7 @@ public class VehiculeDao {
             }
         }
         return vehicule;
-=======
-    private Connection connection;
 
-    public VehiculeDao() throws SQLException {
-        this.connection  = DatabaseConnector.connect();
->>>>>>> b2d697c (Rapport du projet & Gestion des examens)
     }
 
     public void save(Vehicule vehicule) throws SQLException {
@@ -48,11 +43,7 @@ public class VehiculeDao {
             statement.setString(1, vehicule.getMarque());
             statement.setString(2, vehicule.getModele());
             statement.setInt(3, vehicule.getAnneeFabrication());
-<<<<<<< HEAD
 
-=======
-            
->>>>>>> b2d697c (Rapport du projet & Gestion des examens)
             statement.executeUpdate();
         }
     }
@@ -72,10 +63,7 @@ public class VehiculeDao {
         }
         return vehicules;
     }
-<<<<<<< HEAD
 
-    // Vous pouvez implémenter d'autres méthodes pour la mise à jour et la suppression des véhicules si nécessaire
-=======
     
     // Méthode pour récupérer tous les ID des véhicules depuis la base de données
     public List<String> getAllVehicleIds() throws SQLException {
@@ -96,14 +84,11 @@ public class VehiculeDao {
     
     // Vous pouvez implémenter d'autres méthodes pour la mise à jour et la suppression des véhicules si nécessaire
 
->>>>>>> b2d697c (Rapport du projet & Gestion des examens)
     public void close() throws SQLException {
         if (connection != null && !connection.isClosed()) {
             connection.close();
         }
     }
-
-<<<<<<< HEAD
     public List<Integer> getAllVehiculeIds() throws SQLException {
         List<Integer> vehicleIds = new ArrayList<>();
         String query = "SELECT id FROM Vehicule";
@@ -116,7 +101,6 @@ public class VehiculeDao {
         return vehicleIds;
     }
 
-=======
     // Méthode pour récupérer un véhicule par son ID
     public Vehicule getById(int id) throws SQLException {
         Vehicule vehicule = null;
@@ -136,5 +120,22 @@ public class VehiculeDao {
         }
         return vehicule;
     }
->>>>>>> b2d697c (Rapport du projet & Gestion des examens)
+    
+    
+    
+    
+        public int getNombreVehicule() {
+        int nbr = 0;
+        String query = "SELECT count(*) as count FROM Vehicule"; // Utilisation de l'alias "count" pour obtenir le résultat
+        try (PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet res = statement.executeQuery()) {
+            if (res.next()) {
+                nbr = res.getInt("count"); // Récupération du résultat à partir de l'alias "count"
+            }
+        } catch (SQLException ex) {
+            // Gérer l'exception (affichage d'un message d'erreur, journalisation, etc.)
+            ex.printStackTrace();
+        }
+        return nbr;
+    }
 }

@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -12,18 +12,7 @@ package auto_ecole.gui;
 import javax.swing.*;
 import java.awt.*;
 
-public class GestionExamensPanel extends JPanel {
-    public GestionExamensPanel() {
-        setBackground(Color.WHITE);
-        setPreferredSize(new Dimension(400, 300));
-        JLabel label = new JLabel("Gestion Examens");
-        label.setFont(new Font("Arial", Font.BOLD, 20));
-        add(label, BorderLayout.CENTER);
-    }
-}
 
-=======
-package auto_ecole.gui;
 
 import auto_ecole.database.ExamenDao;
 import auto_ecole.database.MoniteursDao;
@@ -64,7 +53,7 @@ public class GestionExamensPanel extends JPanel {
     
     
    
-    public GestionExamensPanel() {
+    public GestionExamensPanel() throws SQLException {
         try {
             this.examenDao = new ExamenDao(); // Initialisez avec une instance valide de ExamenDao
             this.moniteurDao = new MoniteursDao(); // Initialisez avec une instance valide de MoniteursDao
@@ -223,17 +212,12 @@ private void deleteSelectedExamen() {
 }
 
     // Méthode pour charger les données des moniteurs dans le JComboBox
-    private void loadMoniteursData() {
-    try {
+    private void loadMoniteursData() throws SQLException {
         List<Moniteur> moniteurs = moniteurDao.getAll();
         for (Moniteur moniteur : moniteurs) {
             String nomPrenom = moniteur.getId() + ", " +moniteur.getNom() + " " + moniteur.getPrenom();
             instructeurComboBox.addItem(nomPrenom);
         }
-    } catch (SQLException ex) {
-        handleError("Erreur lors du chargement des moniteurs : " + ex.getMessage());
-        ex.printStackTrace();
-    }
 }
 
     // Méthode pour charger les données des examens dans le tableau
@@ -359,4 +343,3 @@ public class HeureField extends JPanel {
 }
 
 }
->>>>>>> b2d697c (Rapport du projet & Gestion des examens)

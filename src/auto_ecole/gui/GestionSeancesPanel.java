@@ -18,13 +18,11 @@ import java.util.List;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
     import com.toedter.calendar.JDateChooser; // Import du composant JDateChooser
-<<<<<<< HEAD
-=======
+
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
->>>>>>> b2d697c (Rapport du projet & Gestion des examens)
 
 public class GestionSeancesPanel extends JPanel {
    private DefaultTableModel tableModel;
@@ -255,15 +253,9 @@ private void deleteSelectedSeance() {
     }
 }
 
-<<<<<<< HEAD
 
 
 
 
 }
-=======
-}
 
-
-
->>>>>>> b2d697c (Rapport du projet & Gestion des examens)

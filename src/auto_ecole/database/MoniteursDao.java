@@ -90,9 +90,7 @@ public class MoniteursDao {
     }
 }
 
-<<<<<<< HEAD
 
-=======
     // Méthode pour récupérer tous les ID des moniteurs depuis la base de données
     public List<String> getAllInstructorIds() throws SQLException {
         List<String> instructorIds = new ArrayList<>();
@@ -129,5 +127,20 @@ public class MoniteursDao {
         }
         return moniteur;
     }
->>>>>>> b2d697c (Rapport du projet & Gestion des examens)
+    
+    
+        public int getNombreInstructeur() {
+        int nbr = 0;
+        String query = "SELECT count(*) as count FROM Instructeur"; // Utilisation de l'alias "count" pour obtenir le résultat
+        try (PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet res = statement.executeQuery()) {
+            if (res.next()) {
+                nbr = res.getInt("count"); // Récupération du résultat à partir de l'alias "count"
+            }
+        } catch (SQLException ex) {
+            // Gérer l'exception (affichage d'un message d'erreur, journalisation, etc.)
+            ex.printStackTrace();
+        }
+        return nbr;
+    }
 }

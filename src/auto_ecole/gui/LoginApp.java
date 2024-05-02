@@ -1,11 +1,6 @@
 package auto_ecole.gui;
 
-<<<<<<< HEAD
-=======
 
-
-
->>>>>>> b2d697c (Rapport du projet & Gestion des examens)
 import auto_ecole.Constants.FrameConstantes;
 import java.sql.*;
 import java.util.*;
@@ -32,56 +27,37 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.SwingUtilities;
 
-<<<<<<< HEAD
-public class LoginApp extends JFrame implements ActionListener {
-=======
+
 public class LoginApp  extends JFrame implements ActionListener{
->>>>>>> b2d697c (Rapport du projet & Gestion des examens)
     private JLabel passText;
     private JPanel mainPanel;
     private JPasswordField passwordField;
     private JButton verifyButton;
     private static final String CONSTANT_PASSWORD = "123";
 
-<<<<<<< HEAD
+
     public LoginApp() {
 
         // Create a JPanel with BoxLayout
         mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         // mainPanel.setMaximumSize(new Dimension(300, 70)); // Set maximum size
-=======
- 
-    
-    public LoginApp(){
-        
-       // Create a JPanel with BoxLayout
-        mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        //mainPanel.setMaximumSize(new Dimension(300, 70)); // Set maximum size
->>>>>>> b2d697c (Rapport du projet & Gestion des examens)
+
+   
 
         // Set background color
         mainPanel.setBackground(Color.WHITE);
         mainPanel.setOpaque(false);
         // Create components
-<<<<<<< HEAD
-        // Create components
-        JLabel enterPasswordLabel = new JLabel("Enter Password:");
-        enterPasswordLabel.setFont(new Font("Arial", Font.PLAIN, 26)); // Set font
-        // enterPasswordLabel.setMaximumSize(new Dimension(300, 30)); // Set maximum
-        // size
-=======
+
       // Create components
         JLabel enterPasswordLabel = new JLabel("Enter Password:");
         enterPasswordLabel.setFont(new Font("Arial", Font.PLAIN, 26)); // Set font
         //enterPasswordLabel.setMaximumSize(new Dimension(300, 30)); // Set maximum size
->>>>>>> b2d697c (Rapport du projet & Gestion des examens)
-
-        passwordField = new JPasswordField(2);
+    passwordField = new JPasswordField(2);
         passwordField.setMaximumSize(new Dimension(650, 60)); // Set maximum size
         passwordField.setFont(new Font("Arial", Font.PLAIN, 18)); // Set font
-<<<<<<< HEAD
+
         // Add key listener to password field to listen for Enter key press
         passwordField.addActionListener(new ActionListener() {
             @Override
@@ -108,8 +84,6 @@ public class LoginApp  extends JFrame implements ActionListener{
                 }
             }
         });
-=======
->>>>>>> b2d697c (Rapport du projet & Gestion des examens)
 
         verifyButton = new JButton("Verify");
         verifyButton.setMaximumSize(new Dimension(200, 50)); // Set maximum size
@@ -121,7 +95,7 @@ public class LoginApp  extends JFrame implements ActionListener{
         passwordField.setAlignmentX(Component.CENTER_ALIGNMENT);
         verifyButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-<<<<<<< HEAD
+
         // Add mainPanel to content pane using BorderLayout.CENTER
         getContentPane().add(mainPanel, BorderLayout.CENTER);
         // Load the image
@@ -129,17 +103,15 @@ public class LoginApp  extends JFrame implements ActionListener{
         JLabel backgroundLabel = new JLabel(backgroundImage);
 
         // Add background label to content pane at the back
-=======
-      
+
         // Add mainPanel to content pane using BorderLayout.CENTER
         getContentPane().add(mainPanel, BorderLayout.CENTER);
          // Load the image
-        ImageIcon backgroundImage = new ImageIcon("ressources/background.jpeg");
-        JLabel backgroundLabel = new JLabel(backgroundImage);
+        //ImageIcon backgroundImage;
+        backgroundImage = new ImageIcon("ressources/background.jpeg");
+        //JLabel backgroundLabel = new JLabel(backgroundImage);
 
 // Add background label to content pane at the back
-       
->>>>>>> b2d697c (Rapport du projet & Gestion des examens)
 
         // Add dummy components to other regions to fill remaining space
         JPanel northPanel = new JPanel();
@@ -164,13 +136,8 @@ public class LoginApp  extends JFrame implements ActionListener{
             public void actionPerformed(ActionEvent e) {
                 String enteredPassword = new String(passwordField.getPassword());
                 if (enteredPassword.equals(CONSTANT_PASSWORD)) {
-<<<<<<< HEAD
-                    JLabel successLabel = new JLabel("Password Verified");
-                    // Create a custom JPanel for the success message
-=======
+
                    JLabel successLabel = new JLabel("Password Verified");
-                   // Create a custom JPanel for the success message
->>>>>>> b2d697c (Rapport du projet & Gestion des examens)
                     JPanel successPanel = new JPanel();
                     successPanel.setLayout(new BorderLayout());
                     successLabel.setForeground(Color.GREEN); // Set text color to white
@@ -184,26 +151,13 @@ public class LoginApp  extends JFrame implements ActionListener{
                     JOptionPane.showMessageDialog(null, successPanel, "Success", JOptionPane.PLAIN_MESSAGE);
                     new Home().setVisible(true);
                     setVisible(false);
-<<<<<<< HEAD
-=======
-                     
-                
-            
->>>>>>> b2d697c (Rapport du projet & Gestion des examens)
+
                 } else {
                     JOptionPane.showMessageDialog(null, "Incorrect Password", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
-<<<<<<< HEAD
-        // Add components to mainPanel
-        mainPanel.add(Box.createVerticalStrut(50));
-        mainPanel.add(enterPasswordLabel);
 
-        mainPanel.add(Box.createRigidArea(new Dimension(0, 22)));
-        mainPanel.add(passwordField);
-        mainPanel.add(backgroundLabel);
-=======
   // Add components to mainPanel
         mainPanel.add(Box.createVerticalStrut(50)); 
         mainPanel.add(enterPasswordLabel);
@@ -211,14 +165,12 @@ public class LoginApp  extends JFrame implements ActionListener{
         mainPanel.add(Box.createRigidArea(new Dimension(0, 22)));
         mainPanel.add(passwordField);
          mainPanel.add(backgroundLabel);
->>>>>>> b2d697c (Rapport du projet & Gestion des examens)
         mainPanel.add(Box.createRigidArea(new Dimension(0, 22)));
         mainPanel.add(verifyButton);
 
         mainPanel.add(Box.createVerticalStrut(100));
         // Make the JFrame visible
         setVisible(true);
-<<<<<<< HEAD
 
         // this is the constates patames for all JFRAMES in our project check it to see
         // what is there
@@ -252,13 +204,10 @@ public class LoginApp  extends JFrame implements ActionListener{
 //
 //
 // }
-=======
+
         
         // this is the constates patames for all JFRAMES in our project check it to see what is there
-        new FrameConstantes(this,"Login Page");
      
-      
-    }
     
     
     
@@ -271,13 +220,9 @@ public class LoginApp  extends JFrame implements ActionListener{
 //            }
 //        });
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+  
     
     
-    }
 
 //    public void actionPerformed(ActionEvent e) {
 //    SwingUtilities.invokeLater(new Runnable() {
@@ -289,6 +234,3 @@ public class LoginApp  extends JFrame implements ActionListener{
 //    
 //    
 //    }
-
-
->>>>>>> b2d697c (Rapport du projet & Gestion des examens)

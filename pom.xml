@@ -26,6 +26,12 @@
             <version>42.3.1</version> <!-- Adjust version as needed -->
         </dependency>
         <!-- Add other dependencies here -->
+        <dependency>
+            <groupId>org.jfree</groupId>
+            <artifactId>jfreechart</artifactId>
+            <version>1.5.3</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
     <build>
         <sourceDirectory>${project.basedir}/src</sourceDirectory>
