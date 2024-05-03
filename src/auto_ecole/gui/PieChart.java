@@ -28,7 +28,7 @@ public class PieChart extends JPanel {
             
             // Create the chart
             JFreeChart chart = ChartFactory.createPieChart(
-                    "Pie Chart Example",
+                    "Les Candidats avec leur dépences",
                     dataset,
                     true, // include legend
                     true, // include tooltips

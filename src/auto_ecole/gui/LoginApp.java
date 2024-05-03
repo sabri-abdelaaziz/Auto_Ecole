@@ -16,6 +16,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -64,21 +66,25 @@ public class LoginApp  extends JFrame implements ActionListener{
             public void actionPerformed(ActionEvent e) {
                 String enteredPassword = new String(passwordField.getPassword());
                 if (enteredPassword.equals(CONSTANT_PASSWORD)) {
-                    JLabel successLabel = new JLabel("Password Verified");
-                    // Create a custom JPanel for the success message
-                    JPanel successPanel = new JPanel();
-                    successPanel.setLayout(new BorderLayout());
-                    successLabel.setForeground(Color.GREEN); // Set text color to white
-                    successLabel.setHorizontalAlignment(JLabel.CENTER); // Center-align the text
-                    successLabel.setFont(new Font("Arial", Font.BOLD, 26)); // Set font and style
-
-                    // Add the success label to the success panel
-                    successPanel.add(successLabel, BorderLayout.CENTER);
-
-                    // Show the custom success message panel
-                    JOptionPane.showMessageDialog(null, successPanel, "Success", JOptionPane.PLAIN_MESSAGE);
-                    new Home().setVisible(true);
-                    setVisible(false);
+                    try {
+                        JLabel successLabel = new JLabel("Password Verified");
+                        // Create a custom JPanel for the success message
+                        JPanel successPanel = new JPanel();
+                        successPanel.setLayout(new BorderLayout());
+                        successLabel.setForeground(Color.GREEN); // Set text color to white
+                        successLabel.setHorizontalAlignment(JLabel.CENTER); // Center-align the text
+                        successLabel.setFont(new Font("Arial", Font.BOLD, 26)); // Set font and style
+                        
+                        // Add the success label to the success panel
+                        successPanel.add(successLabel, BorderLayout.CENTER);
+                        
+                        // Show the custom success message panel
+                        JOptionPane.showMessageDialog(null, successPanel, "Success", JOptionPane.PLAIN_MESSAGE);
+                        new Home().setVisible(true);
+                        setVisible(false);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(LoginApp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 } else {
                     JOptionPane.showMessageDialog(null, "Incorrect Password", "Error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -149,7 +155,11 @@ public class LoginApp  extends JFrame implements ActionListener{
 
                     // Show the custom success message panel
                     JOptionPane.showMessageDialog(null, successPanel, "Success", JOptionPane.PLAIN_MESSAGE);
-                    new Home().setVisible(true);
+                    try {
+                        new Home().setVisible(true);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(LoginApp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     setVisible(false);
 
                 } else {

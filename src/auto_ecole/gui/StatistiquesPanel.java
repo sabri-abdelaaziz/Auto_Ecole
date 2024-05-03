@@ -25,9 +25,11 @@ public class StatistiquesPanel extends JPanel {
             setLayout(new GridLayout(0, 2, 10, 10)); // GridLayout with 2 columns
             
             // Add statistics for each entity
-            add(createStatisticLabel("Cours", "Total: "+nbrCours, "Pratiques: 12"));
-            add(new PieChart());
+            
             add(createStatisticLabel("Candidats", "Total: "+nbrUsers, "Actifs: 800"));
+            add(new PieChart());
+            
+            add(createStatisticLabel("Cours", "Total: "+nbrCours, "Pratiques: 12"));
             add(new LineChart("les revenu par mois","mois","revenues"));
             add(createStatisticLabel("Examen", "Total: "+nbrExamen, "Réussis: 25"));
             add(new BarChart());

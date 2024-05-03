@@ -11,7 +11,7 @@ public class Home extends JFrame implements NavBarListener {
     private JPanel centerPanel;    
     private JPanel headerPanel;
 
-    public Home() {
+    public Home() throws SQLException {
         setTitle("Home");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
@@ -114,6 +114,12 @@ public class Home extends JFrame implements NavBarListener {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new Home());
+        SwingUtilities.invokeLater(() -> {
+            try {
+                new Home();
+            } catch (SQLException ex) {
+                Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
     }
 }

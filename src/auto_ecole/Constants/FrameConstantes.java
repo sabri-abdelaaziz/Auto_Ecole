@@ -19,7 +19,7 @@ public class FrameConstantes {
         // add title to frame
         j.setTitle(Title);
         // set the size width and height 
-        j.setSize(1100,900);
+        j.setSize(1400,1100);
         // set the color to your Jframe
         j.setBackground(Color.GREEN);
         //  to set background color to your jframe it's require to add a container

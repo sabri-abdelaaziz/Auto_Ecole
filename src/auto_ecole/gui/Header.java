@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.awt.Image;
 
 public class Header extends JPanel {
     private JLabel titleLabel;
@@ -21,11 +20,12 @@ public class Header extends JPanel {
         try {
             ImageIcon originalIcon = new ImageIcon(getClass().getResource("back2.jpeg"));
             Image originalImage = originalIcon.getImage();
-            Image scaledImage = originalImage.getScaledInstance(200, 70, Image.SCALE_SMOOTH); // Adjust size here
+            Image scaledImage = originalImage.getScaledInstance(200, 40, Image.SCALE_SMOOTH); // Adjust size here
             logoIcon = new ImageIcon(scaledImage);
         } catch (NullPointerException e) {
             System.err.println("Image file not found: " + e.getMessage());
         }
+        System.out.print(logoIcon);
         logoLabel = new JLabel(logoIcon);
         add(logoLabel, BorderLayout.WEST);
 

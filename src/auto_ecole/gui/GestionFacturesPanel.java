@@ -141,16 +141,16 @@ table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
     }
 
     // Méthode pour charger les données des paiements dans le tableau
-    private void loadPaiementData() {
-        try {
-            paiementDao = new PaiementDao();
-            List<Paiement> paiements = paiementDao.getAll();
-            updateTable(paiements);
-        } catch (SQLException e) {
-            handleError("Erreur lors du chargement des données des paiements : " + e.getMessage());
-            e.printStackTrace();
+        private void loadPaiementData() {
+            try {
+                paiementDao = new PaiementDao();
+                List<Paiement> paiements = paiementDao.getAll();
+                updateTable(paiements);
+            } catch (SQLException e) {
+                handleError("Erreur lors du chargement des données des paiements : " + e.getMessage());
+                e.printStackTrace();
+            }
         }
-    }
 
     // Méthode pour mettre à jour le tableau avec les données des paiements
     private void updateTable(List<Paiement> paiements) {
