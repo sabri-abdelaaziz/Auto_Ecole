@@ -50,8 +50,8 @@ public class GestionVehiculesPanel extends JPanel {
         titlePanel.setBackground(Color.WHITE);
 
         // Loading and resizing the icon
-        ImageIcon icon = new ImageIcon("C:\\Users\\HP\\Desktop\\Projet_J2EE\\Auto_Ecole\\src\\voiture.jpg");
-        Image image = icon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        ImageIcon icon = new ImageIcon("C:\\Users\\HP\\Desktop\\Projet_J2EE\\Auto_Ecole\\src\\voiture.png");
+        Image image = icon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
         ImageIcon resizedIcon = new ImageIcon(image);
         JLabel iconLabel = new JLabel(resizedIcon);
 

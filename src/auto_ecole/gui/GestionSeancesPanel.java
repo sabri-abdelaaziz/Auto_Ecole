@@ -23,6 +23,9 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.LineBorder;
 
 public class GestionSeancesPanel extends JPanel {
    private DefaultTableModel tableModel;
@@ -37,37 +40,114 @@ public class GestionSeancesPanel extends JPanel {
     public GestionSeancesPanel() {
         setBackground(Color.WHITE);
         setLayout(new BorderLayout());
+        
+        try {
+            coursDao = new CoursDao();
+           
+        } catch (SQLException e) {
+            handleError("Erreur lors du chargement des données : " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        // Top panel
+        JPanel northPanel = new JPanel(new BorderLayout());
+        northPanel.setBackground(Color.WHITE);
+        northPanel.setPreferredSize(new Dimension(northPanel.getPreferredSize().width, 100));
+        northPanel.setBorder(new CompoundBorder(new LineBorder(Color.BLACK), new EmptyBorder(10, 10, 10, 10)));
 
-        // Panel Nord
-        JPanel northPanel=new JPanel(new BorderLayout());
-        JLabel label = new JLabel("Gestion des Séances");
-        label.setFont(new Font("Arial", Font.BOLD, 20));
-        label.setHorizontalAlignment(SwingConstants.CENTER);
-        northPanel.add(label, BorderLayout.CENTER);
+        // Title Label with icon
+        JLabel label = new JLabel("Gestion Séances");
+        label.setFont(new Font("Times New Roman", Font.BOLD, 24));
+        label.setForeground(Color.red);
+        
+        JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        titlePanel.setBackground(Color.WHITE);
 
-        // Panel Gauche: Formulaire d'ajout de séance
+        // Loading and resizing the icon
+        ImageIcon icon = new ImageIcon("C:\\Users\\HP\\Desktop\\Projet_J2EE\\Auto_Ecole\\src\\seance.png");
+        Image image = icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        ImageIcon resizedIcon = new ImageIcon(image);
+        JLabel iconLabel = new JLabel(resizedIcon);
+
+        // Adding icon and title label to the title panel
+        titlePanel.add(iconLabel);
+        titlePanel.add(label);
+        northPanel.add(titlePanel, BorderLayout.CENTER);
+
+        // Main panel
+        JPanel mainPanel = new JPanel(new GridBagLayout());
+        mainPanel.setBackground(Color.WHITE);
+
+        // Left Panel: Add User Form
         JPanel leftPanel = new JPanel(new BorderLayout());
-        leftPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        leftPanel.setBorder(new CompoundBorder(new LineBorder(Color.BLACK), new EmptyBorder(20, 20, 20, 20)));
+        leftPanel.setBackground(Color.WHITE);
 
-        // Composants du formulaire
-        JPanel formPanel = new JPanel(new GridLayout(5, 2, 5, 5));
-        formPanel.add(new JLabel("Date:"));
+        // Add User Form Components
+        JPanel formPanel = new JPanel();
+        formPanel.setLayout(new GridBagLayout());
+        formPanel.setBackground(Color.white);
+        formPanel.setBorder(new CompoundBorder(new LineBorder(new Color(178, 34, 34)), new EmptyBorder(10, 10, 10, 10)));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(5, 10, 5, 10);
 
-        // Utilisation de JDateChooser pour la sélection de la date
+        JLabel addUserLabel = new JLabel("Ajouter un cours :");
+        addUserLabel.setFont(new Font("Times New Roman", Font.BOLD, 20));
+        addUserLabel.setForeground(Color.ORANGE);
+        formPanel.add(addUserLabel, gbc);
+
+        gbc.gridy++;
+        gbc.anchor = GridBagConstraints.WEST; // Alignement à gauche
+        // Add Course Form Components
+
+        gbc.gridy++;
+        formPanel.add(new JLabel("Date :"), gbc);
+        gbc.gridy++;
         dateChooser = new JDateChooser();
-        formPanel.add(dateChooser);
+        JLabel labelForWidth = new JLabel();
+        dateChooser.setPreferredSize(new Dimension(13 * labelForWidth.getFontMetrics(labelForWidth.getFont()).charWidth('W'), dateChooser.getPreferredSize().height));
+        dateChooser.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+        formPanel.add(dateChooser, gbc);
 
-        formPanel.add(new JLabel("Heure de début:"));
-        heureDebutField = new JTextField();
-        formPanel.add(heureDebutField);
-        formPanel.add(new JLabel("Heure de fin:"));
-        heureFinField = new JTextField();
-        formPanel.add(heureFinField);
-        formPanel.add(new JLabel("Cours:"));
+        
+        gbc.gridy++;
+        formPanel.add(new JLabel("Heure Début:"), gbc);
+        gbc.gridy++;
+        heureDebutField = new JTextField(15);
+        heureDebutField.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+        formPanel.add(heureDebutField, gbc);
+
+        gbc.gridy++;
+        formPanel.add(new JLabel("Heure Fin:"), gbc);
+        gbc.gridy++;
+        heureFinField = new JTextField(15);
+        heureFinField.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+        formPanel.add(heureFinField, gbc);
+
+        gbc.gridy++;
+        formPanel.add(new JLabel("Cours ID:"), gbc);
+        gbc.gridy++;
         coursComboBox = new JComboBox<>();
-        formPanel.add(coursComboBox);
+        coursComboBox.setPreferredSize(new Dimension(13 * labelForWidth.getFontMetrics(labelForWidth.getFont()).charWidth('W'), coursComboBox.getPreferredSize().height));
+        coursComboBox.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+        coursComboBox.setBackground(Color.WHITE);
+        formPanel.add(coursComboBox, gbc);
 
+        
+        
+        
+        // RoundedBorder
+        formPanel.setBorder(new GestionSeancesPanel.RoundedBorder(20));
+
+        // Create "Ajouter" button
         JButton addButton = new JButton("Ajouter");
+        addButton.setFont(new Font("Times New Roman", Font.BOLD, 14));
+        addButton.setForeground(Color.WHITE);
+        addButton.setBackground(Color.ORANGE); // Rouge clair
+        addButton.setBorder(new GestionSeancesPanel.RoundedBorder(10)); // Bordure arrondie
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -75,22 +155,38 @@ public class GestionSeancesPanel extends JPanel {
                 clearFieldsAndSelection();
             }
         });
-        formPanel.add(addButton);
 
+        // Create "Effacer" button
         JButton clearButton = new JButton("Effacer");
+        clearButton.setFont(new Font("Times New Roman", Font.BOLD, 14));
+        clearButton.setForeground(Color.WHITE);
+        clearButton.setBackground(Color.ORANGE); // Rouge clair
+        clearButton.setBorder(new GestionSeancesPanel.RoundedBorder(10)); // Bordure arrondie
         clearButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                deleteSelectedSeance();
+                clearFieldsAndSelection();
             }
         });
-        formPanel.add(clearButton);
+
+        // Add buttons to form panel with GridBagLayout
+        gbc.gridy++;
+        gbc.gridx++;
+        gbc.insets = new Insets(5, 10, 5, 10); // Ajout d'un espace horizontal entre les boutons
+        formPanel.add(addButton, gbc);
+        
+        // Add horizontal space between buttons
+        gbc.gridx++;
+        gbc.insets = new Insets(5, 10, 5, 10); // Ajout d'un espace horizontal entre les boutons
+        formPanel.add(clearButton, gbc);
 
         leftPanel.add(formPanel, BorderLayout.NORTH);
-
-        // Panel Droite: Tableau des séances avec boutons Modifier et Supprimer
+        
+        
+         // Right Panel: User Table with Modify and Delete Buttons
         JPanel rightPanel = new JPanel(new BorderLayout());
-        rightPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        rightPanel.setBorder(new CompoundBorder(new LineBorder(Color.BLACK), new EmptyBorder(20, 20, 20, 20)));
+        rightPanel.setBackground(Color.WHITE);
 
         // Tableau des séances
         tableModel = new DefaultTableModel();
@@ -105,14 +201,74 @@ public class GestionSeancesPanel extends JPanel {
                 populateFieldsFromSelectedSeance();
             }
         });
+        table.getTableHeader().setFont(new Font("Times New Roman", Font.BOLD, 14)); // Police Times New Roman en gras
+        table.getTableHeader().setBackground(Color.blue); // Fond de l'entête en gris
+        table.setBackground(Color.WHITE); // Fond du tableau en blanc
+        table.setFillsViewportHeight(true); // Remplir la hauteur de la vue
 
+        // Add table to scroll pane with rounded border
         JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(new Dimension(leftPanel.getPreferredSize().width, leftPanel.getPreferredSize().height)); // Même hauteur que leftPanel
+        scrollPane.setBorder(new GestionSeancesPanel.RoundedBorder(20)); // Appliquer le RoundedBorder au JScrollPane
+        scrollPane.setBackground(Color.white);
         rightPanel.add(scrollPane, BorderLayout.CENTER);
 
-        // Ajouter les panels au panel principal
+        // Create "Supprimer" button
+        JButton deleteButton = new JButton("Supprimer");
+        deleteButton.setFont(new Font("Times New Roman", Font.BOLD, 14));
+        deleteButton.setForeground(Color.WHITE);
+        deleteButton.setBackground(Color.blue); // Rouge clair
+        deleteButton.setBorder(new GestionSeancesPanel.RoundedBorder(10)); // Bordure arrondie
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                deleteSelectedSeance();
+                clearFieldsAndSelection();
+            }
+        });
+
+        // Create "Modifier" button
+        JButton modifyButton = new JButton("Modifier");
+        modifyButton.setFont(new Font("Times New Roman", Font.BOLD, 14));
+        modifyButton.setForeground(Color.WHITE);
+        modifyButton.setBackground(Color.blue); // Rouge clair
+        modifyButton.setBorder(new GestionSeancesPanel.RoundedBorder(10)); // Bordure arrondie
+        modifyButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                modifySeance();
+                clearFieldsAndSelection();
+            }
+        });
+
+        // Ajouter les boutons "Supprimer" et "Modifier" au rightPanel
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.setBackground(Color.WHITE);
+        buttonPanel.add(deleteButton);
+        buttonPanel.add(modifyButton);
+        rightPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        // Add panels to main panel
+        GridBagConstraints leftPanelConstraints = new GridBagConstraints();
+        leftPanelConstraints.gridx = 0;
+        leftPanelConstraints.gridy = 0;
+        leftPanelConstraints.weightx = 0.5;
+        leftPanelConstraints.fill = GridBagConstraints.BOTH;
+        leftPanelConstraints.insets = new Insets(10, 10, 10, 5);
+
+        mainPanel.add(leftPanel, leftPanelConstraints);
+
+        GridBagConstraints rightPanelConstraints = new GridBagConstraints();
+        rightPanelConstraints.gridx = 1;
+        rightPanelConstraints.gridy = 0;
+        rightPanelConstraints.weightx = 0.5;
+        rightPanelConstraints.fill = GridBagConstraints.BOTH;
+        rightPanelConstraints.insets = new Insets(10, 10, 10, 5);
+
+        mainPanel.add(rightPanel, rightPanelConstraints);
+
         add(northPanel, BorderLayout.NORTH);
-        add(leftPanel, BorderLayout.WEST);
-        add(rightPanel, BorderLayout.CENTER);
+        add(mainPanel, BorderLayout.CENTER);
 
         // Charger les données des séances
         loadSeanceData();
@@ -201,10 +357,12 @@ private void addSeance() {
 
     // Méthode pour effacer les champs de texte et la sélection dans le tableau
     private void clearFieldsAndSelection() {
-       // dateField.setText("");
         heureDebutField.setText("");
         heureFinField.setText("");
         table.clearSelection();
+        dateChooser.setDate(null);
+        coursComboBox.setSelectedIndex(0); // Sélectionne le premier élément dans le JComboBox de véhicules
+
     }
 
     // Méthode pour gérer les erreurs en affichant une boîte de dialogue
@@ -251,11 +409,72 @@ private void deleteSelectedSeance() {
     } else {
         JOptionPane.showMessageDialog(this, "Veuillez sélectionner une séance à supprimer.", "Erreur", JOptionPane.ERROR_MESSAGE);
     }
+    
+}  
+    
+     public class RoundedBorder implements Border {
+        private int radius;
+
+        public RoundedBorder(int radius) {
+            this.radius = radius;
+        }
+
+        public Insets getBorderInsets(Component c) {
+            return new Insets(this.radius + 1, this.radius + 1, this.radius + 2, this.radius);
+        }
+
+        public boolean isBorderOpaque() {
+            return true;
+        }
+
+        public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+            g.drawRoundRect(x, y, width - 1, height - 1, radius, radius);
+        }
+    }
+    
+   
+    private void modifySeance() {
+    int selectedRow = table.getSelectedRow();
+    if (selectedRow != -1) {
+        Date selectedDate = dateChooser.getDate();
+        java.sql.Date sqlDate = new java.sql.Date(selectedDate.getTime()); // Convert java.util.Date to java.sql.Date
+        String heureDebut = heureDebutField.getText();
+        String heureFin = heureFinField.getText();
+
+        if (sqlDate != null && !heureDebut.isEmpty() && !heureFin.isEmpty()) {
+            
+                int seanceId = (int) tableModel.getValueAt(selectedRow, 0); // Get the ID of the selected Seance
+                try {
+                    // Get the ID of the selected cours from the combo box selection
+                    String selectedCours = (String) coursComboBox.getSelectedItem();
+                    int coursId = Integer.parseInt(selectedCours.split(" - ")[0]);
+
+                    Seance modifiedSeance = new Seance(seanceId, coursId, sqlDate, heureDebut, heureFin);
+                    seancesDao.update(modifiedSeance); // Update the Seance in the database
+                    loadSeanceData(); // Reload Seance data after modification
+                    clearFieldsAndSelection(); // Clear text fields and selection in the table after modification
+                    JOptionPane.showMessageDialog(this, "Séance modifiée avec succès.", "Modification réussie", JOptionPane.INFORMATION_MESSAGE);
+                } catch (SQLException ex) {
+                    handleError("Erreur lors de la modification de la séance : " + ex.getMessage());
+                    ex.printStackTrace();
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Veuillez remplir tous les champs.", "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
+
+        JOptionPane.showMessageDialog(this, "Veuillez sélectionner une séance à modifier.", "Erreur", JOptionPane.ERROR_MESSAGE);
+    }
+     
+     
+     
 }
 
 
 
 
 
-}
+
+
+
 

@@ -82,17 +82,31 @@ public int calculCandidats() {
     }
 
     // Method to save a new user
-    public void save(User user) throws SQLException {
-    String query = "INSERT INTO Eleve (nom, prenom, adresse, telephone) VALUES ( ?, ?, ?, ?)";
-    try (PreparedStatement statement = connection.prepareStatement(query)) {
-        //statement.setInt(1, user.getId());
+public void save(User user) throws SQLException {
+    String query = "INSERT INTO Eleve (nom, prenom, adresse, telephone) VALUES (?, ?, ?, ?)";
+    try (PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
         statement.setString(1, user.getNom());
         statement.setString(2, user.getPrenom());
         statement.setString(3, user.getAdresse());
         statement.setString(4, user.getTelephone());
 
-        statement.executeUpdate();
+        int affectedRows = statement.executeUpdate();
+
+        if (affectedRows == 0) {
+            throw new SQLException("L'insertion de l'utilisateur a échoué, aucune ligne affectée.");
+        }
+
+        try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+            if (generatedKeys.next()) {
+                int userId = generatedKeys.getInt(1);
+                user.setId(userId); // Mettre à jour l'ID de l'utilisateur avec celui généré
+            } else {
+                throw new SQLException("Échec de la récupération de l'ID généré pour l'utilisateur ajouté.");
+            }
+        }
     }
+
+
 }
     // Method to update an existing user
 public void update(User user) throws SQLException {
@@ -138,7 +152,7 @@ public void delete(int userId) throws SQLException {
 
     try {
         String query = "SELECT LAST_INSERT_ID() AS last_id"; // MySQL
-        statement = connection.prepareStatement(query); // Use the existing connection instance
+        statement = connection.prepareStatement(query); // Utilisez l'instance de connexion existante
         
         resultSet = statement.executeQuery();
 
@@ -146,14 +160,14 @@ public void delete(int userId) throws SQLException {
             lastInsertedId = resultSet.getInt("last_id");
         }
     } finally {
-        // Close resources securely
+        // Fermez les ressources de manière sécurisée
         if (resultSet != null) {
             resultSet.close();
         }
         if (statement != null) {
             statement.close();
         }
-        // Do not close the connection here, as it should be managed externally
+        // Ne fermez pas la connexion ici, car elle doit être gérée de manière externe
     }
 
     return lastInsertedId;

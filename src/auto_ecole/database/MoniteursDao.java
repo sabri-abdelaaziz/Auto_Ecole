@@ -1,5 +1,6 @@
 package auto_ecole.database;
 
+import auto_ecole.model.Cours;
 import java.sql.*;
 import java.util.*;
 
@@ -12,25 +13,51 @@ public class MoniteursDao {
         this.connection  = DatabaseConnector.connect();
     }
 
-    // Method to find a Moniteur by Moniteurname
-    public Moniteur findByMoniteurname(String Moniteurname) throws SQLException {
-        String query = "SELECT * FROM Instructeur WHERE nom = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, Moniteurname);
-            try (ResultSet res = statement.executeQuery()) {
-                if (res.next()) {
-                int id = res.getByte("id");
+    
+    // Method to find a Moniteur by ID
+public Moniteur findMoniteurById(int moniteurId) throws SQLException {
+    String query = "SELECT * FROM Instructeur WHERE id = ?";
+    try (PreparedStatement statement = connection.prepareStatement(query)) {
+        statement.setInt(1, moniteurId);
+        try (ResultSet res = statement.executeQuery()) {
+            if (res.next()) {
+                int id = res.getInt("id");
                 String nom = res.getString("nom");
                 String prenom = res.getString("prenom");
                 String adresse = res.getString("adresse");
                 String telephone = res.getString("telephone");
-                return new Moniteur(id,nom,prenom,adresse,telephone);
-                }
+                return new Moniteur(id, nom, prenom, adresse, telephone);
             }
         }
-        return null; // Moniteur not found
     }
+    return null; // Moniteur not found
+}
 
+
+    
+    // Method to delete a user by ID
+public void delete(int moniteurId) throws SQLException {
+    String query = "DELETE FROM Instructeur WHERE id = ?";
+    try (PreparedStatement statement = connection.prepareStatement(query)) {
+        statement.setInt(1, moniteurId);
+        statement.executeUpdate();
+    }
+}
+
+// Méthode pour mettre à jour un cours existant
+    public void update(Moniteur moniteur) throws SQLException {
+        String query = "UPDATE Instructeur SET nom = ?, prenom = ?, adresse = ?, telephone = ? WHERE id = ?";
+        try (PreparedStatement st = connection.prepareStatement(query)) {
+            st.setString(1, moniteur.getNom());
+            st.setString(2, moniteur.getPrenom());
+            st.setString(3, moniteur.getAdresse());
+            st.setString(4, moniteur.getTelephone());
+            st.setInt(5, moniteur.getId());
+            st.executeUpdate();
+        }
+    }
+    
+    
     // Method to retrieve all Moniteurs
     public List<Moniteur> getAll() throws SQLException {
         List<Moniteur> MoniteurList = new ArrayList<>();

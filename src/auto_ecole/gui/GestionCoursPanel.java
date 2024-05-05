@@ -2,6 +2,7 @@
 package auto_ecole.gui;
 
 import auto_ecole.database.CoursDao;
+import auto_ecole.database.MoniteursDao;
 import auto_ecole.database.VehiculeDao;
 import auto_ecole.model.Cours;
 import auto_ecole.model.User;
@@ -15,6 +16,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.List;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -31,48 +35,134 @@ public class GestionCoursPanel extends JPanel {
     private JTextField heureFinField;
     private JComboBox<String> vehiculeIdComboBox;
     private List<Integer> vehiculeIds;
+    
 
     public GestionCoursPanel() {
         setBackground(Color.WHITE);
         setLayout(new BorderLayout());
-
+        
+        
+        try {
+            coursDao = new CoursDao();
+           
+        } catch (SQLException e) {
+            handleError("Erreur lors du chargement des données : " + e.getMessage());
+            e.printStackTrace();
+        }
+        
         // Top panel
         JPanel northPanel = new JPanel(new BorderLayout());
-        nbrLabel = new JLabel("Nbr Cours : " + getNbrCours() + "  ");
-        nbrLabel.setFont(new Font("Arial", Font.BOLD, 12));
-        northPanel.add(nbrLabel, BorderLayout.EAST);
+        northPanel.setBackground(Color.WHITE);
+        northPanel.setPreferredSize(new Dimension(northPanel.getPreferredSize().width, 100));
+        northPanel.setBorder(new CompoundBorder(new LineBorder(Color.BLACK), new EmptyBorder(10, 10, 10, 10)));
 
+        // Title Label with icon
         JLabel label = new JLabel("Gestion Cours");
-        label.setFont(new Font("Arial", Font.BOLD, 20));
-        label.setHorizontalAlignment(SwingConstants.CENTER);
-        northPanel.add(label, BorderLayout.CENTER);
+        label.setFont(new Font("Times New Roman", Font.BOLD, 24));
+        label.setForeground(new Color(178, 34, 34));
+        //new Color(0, 191, 255)
+        JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        titlePanel.setBackground(Color.WHITE);
 
-        // Left Panel: Add Course Form
+        // Loading and resizing the icon
+        ImageIcon icon = new ImageIcon("C:\\Users\\HP\\Desktop\\Projet_J2EE\\Auto_Ecole\\src\\cours.png");
+        Image image = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+        ImageIcon resizedIcon = new ImageIcon(image);
+        JLabel iconLabel = new JLabel(resizedIcon);
+
+        // Adding icon and title label to the title panel
+        titlePanel.add(iconLabel);
+        titlePanel.add(label);
+        northPanel.add(titlePanel, BorderLayout.CENTER);
+
+        // Main panel
+        JPanel mainPanel = new JPanel(new GridBagLayout());
+        mainPanel.setBackground(Color.WHITE);
+
+        // Left Panel: Add User Form
         JPanel leftPanel = new JPanel(new BorderLayout());
-        leftPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        leftPanel.setBorder(new CompoundBorder(new LineBorder(Color.BLACK), new EmptyBorder(20, 20, 20, 20)));
+        leftPanel.setBackground(Color.WHITE);
 
+        // Add User Form Components
+        JPanel formPanel = new JPanel();
+        formPanel.setLayout(new GridBagLayout());
+        formPanel.setBackground(Color.white);
+        formPanel.setBorder(new CompoundBorder(new LineBorder(new Color(178, 34, 34)), new EmptyBorder(10, 10, 10, 10)));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(5, 10, 5, 10);
+
+        JLabel addUserLabel = new JLabel("Ajouter un cours :");
+        addUserLabel.setFont(new Font("Times New Roman", Font.BOLD, 20));
+        addUserLabel.setForeground(new Color(0, 191, 255));
+        formPanel.add(addUserLabel, gbc);
+
+        gbc.gridy++;
+        gbc.anchor = GridBagConstraints.WEST; // Alignement à gauche
         // Add Course Form Components
-        JPanel formPanel = new JPanel(new GridLayout(8, 2, 5, 5));
-        formPanel.add(new JLabel("Titre:"));
-        titreField = new JTextField();
-        formPanel.add(titreField);
-        formPanel.add(new JLabel("Date Début:"));
-        dateDebutField = new JDateChooser();
-        formPanel.add(dateDebutField);
-        formPanel.add(new JLabel("Date Fin:"));
-        dateFinField = new JDateChooser();
-        formPanel.add(dateFinField);
-        formPanel.add(new JLabel("Heure Début:"));
-        heureDebutField = new JTextField();
-        formPanel.add(heureDebutField);
-        formPanel.add(new JLabel("Heure Fin:"));
-        heureFinField = new JTextField();
-        formPanel.add(heureFinField);
-        formPanel.add(new JLabel("Vehicule ID:"));
-        vehiculeIdComboBox = new JComboBox<>();
-        formPanel.add(vehiculeIdComboBox);
 
+              
+        gbc.gridy++;
+        formPanel.add(new JLabel("Titre:"), gbc);
+        gbc.gridy++;
+        titreField = new JTextField(15);
+        titreField.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+        formPanel.add(titreField, gbc);
+
+        gbc.gridy++;
+        formPanel.add(new JLabel("Date Début:"), gbc);
+        gbc.gridy++;
+        dateDebutField = new JDateChooser();
+        dateDebutField.setPreferredSize(new Dimension(13 * titreField.getFontMetrics(titreField.getFont()).charWidth('W'), dateDebutField.getPreferredSize().height));
+        dateDebutField.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+        formPanel.add(dateDebutField, gbc);
+
+        gbc.gridy++;
+        formPanel.add(new JLabel("Date Fin:"), gbc);
+        gbc.gridy++;
+        dateFinField = new JDateChooser();
+        dateFinField.setPreferredSize(new Dimension(13 * titreField.getFontMetrics(titreField.getFont()).charWidth('W'), dateFinField.getPreferredSize().height));
+        dateFinField.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+        formPanel.add(dateFinField, gbc);
+
+        gbc.gridy++;
+        formPanel.add(new JLabel("Heure Début:"), gbc);
+        gbc.gridy++;
+        heureDebutField = new JTextField(15);
+        heureDebutField.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+        formPanel.add(heureDebutField, gbc);
+
+        gbc.gridy++;
+        formPanel.add(new JLabel("Heure Fin:"), gbc);
+        gbc.gridy++;
+        heureFinField = new JTextField(15);
+        heureFinField.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+        formPanel.add(heureFinField, gbc);
+
+        gbc.gridy++;
+        formPanel.add(new JLabel("Vehicule ID:"), gbc);
+        gbc.gridy++;
+        vehiculeIdComboBox = new JComboBox<>();
+        vehiculeIdComboBox.setPreferredSize(new Dimension(13 * titreField.getFontMetrics(titreField.getFont()).charWidth('W'), vehiculeIdComboBox.getPreferredSize().height));
+        vehiculeIdComboBox.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+        vehiculeIdComboBox.setBackground(Color.WHITE);
+        formPanel.add(vehiculeIdComboBox, gbc);
+
+        
+        
+        
+        // RoundedBorder
+        formPanel.setBorder(new GestionCoursPanel.RoundedBorder(20));
+
+        // Create "Ajouter" button
         JButton addButton = new JButton("Ajouter");
+        addButton.setFont(new Font("Times New Roman", Font.BOLD, 14));
+        addButton.setForeground(Color.WHITE);
+        addButton.setBackground(new Color(0, 191, 255)); // Rouge clair
+        addButton.setBorder(new GestionCoursPanel.RoundedBorder(10)); // Bordure arrondie
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -80,42 +170,37 @@ public class GestionCoursPanel extends JPanel {
                 clearFieldsAndSelection();
             }
         });
-        formPanel.add(addButton);
+
+        // Create "Effacer" button
         JButton clearButton = new JButton("Effacer");
+        clearButton.setFont(new Font("Times New Roman", Font.BOLD, 14));
+        clearButton.setForeground(Color.WHITE);
+        clearButton.setBackground(new Color(0, 191, 255)); // Rouge clair
+        clearButton.setBorder(new GestionCoursPanel.RoundedBorder(10)); // Bordure arrondie
         clearButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 clearFieldsAndSelection();
             }
         });
-        formPanel.add(clearButton);
 
-        // Modify and Delete Buttons
-        JButton modifyButton = new JButton("Modifier");
-        modifyButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                modifyCourse();
-                clearFieldsAndSelection();
-            }
-        });
-        formPanel.add(modifyButton);
-
-        JButton deleteButton = new JButton("Supprimer");
-        deleteButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                deleteCourse();
-                clearFieldsAndSelection();
-            }
-        });
-        formPanel.add(deleteButton);
+        // Add buttons to form panel with GridBagLayout
+        gbc.gridy++;
+        gbc.gridx++;
+        gbc.insets = new Insets(5, 10, 5, 10); // Ajout d'un espace horizontal entre les boutons
+        formPanel.add(addButton, gbc);
+        
+        // Add horizontal space between buttons
+        gbc.gridx++;
+        gbc.insets = new Insets(5, 10, 5, 10); // Ajout d'un espace horizontal entre les boutons
+        formPanel.add(clearButton, gbc);
 
         leftPanel.add(formPanel, BorderLayout.NORTH);
 
-        // Right Panel: Course Table
+         // Right Panel: User Table with Modify and Delete Buttons
         JPanel rightPanel = new JPanel(new BorderLayout());
-        rightPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        rightPanel.setBorder(new CompoundBorder(new LineBorder(Color.BLACK), new EmptyBorder(20, 20, 20, 20)));
+        rightPanel.setBackground(Color.WHITE);
 
         tableModel = new DefaultTableModel();
         tableModel.addColumn("ID");
@@ -136,15 +221,89 @@ public class GestionCoursPanel extends JPanel {
                 populateFieldsFromSelectedCourse();
             }
         });
+        table.getTableHeader().setFont(new Font("Times New Roman", Font.BOLD, 14)); // Police Times New Roman en gras
+        table.getTableHeader().setBackground(Color.pink); // Fond de l'entête en gris
+        table.setBackground(Color.WHITE); // Fond du tableau en blanc
+        table.setFillsViewportHeight(true); // Remplir la hauteur de la vue
+
+        // Add table to scroll pane with rounded border
         JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(new Dimension(leftPanel.getPreferredSize().width, leftPanel.getPreferredSize().height)); // Même hauteur que leftPanel
+        scrollPane.setBorder(new GestionCoursPanel.RoundedBorder(20)); // Appliquer le RoundedBorder au JScrollPane
+        scrollPane.setBackground(Color.white);
         rightPanel.add(scrollPane, BorderLayout.CENTER);
 
-        // Add Panels to Main Panel
-        add(northPanel, BorderLayout.NORTH);
-        add(leftPanel, BorderLayout.WEST);
-        add(rightPanel, BorderLayout.CENTER);
+        // Create "Supprimer" button
+        JButton deleteButton = new JButton("Supprimer");
+        deleteButton.setFont(new Font("Times New Roman", Font.BOLD, 14));
+        deleteButton.setForeground(Color.WHITE);
+        deleteButton.setBackground(Color.pink); // Rouge clair
+        deleteButton.setBorder(new GestionCoursPanel.RoundedBorder(10)); // Bordure arrondie
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = table.getSelectedRow();
+                if (selectedRow != -1) {
+                    int userId = (int) tableModel.getValueAt(selectedRow, 0);
+                    try {
+                        coursDao.delete(userId);
+                        loadCourseData();
+                        clearFieldsAndSelection();
+                        JOptionPane.showMessageDialog(GestionCoursPanel.this, "Moniteur supprimé avec succès.", "Suppression réussie", JOptionPane.INFORMATION_MESSAGE);
+                    } catch (SQLException ex) {
+                        handleError("Erreur lors de la suppression du moniteur : " + ex.getMessage());
+                        ex.printStackTrace();
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(GestionCoursPanel.this, "Veuillez sélectionner un moniteur à supprimer.", "Aucune sélection", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
 
-        // Load course data
+        // Create "Modifier" button
+        JButton modifyButton = new JButton("Modifier");
+        modifyButton.setFont(new Font("Times New Roman", Font.BOLD, 14));
+        modifyButton.setForeground(Color.WHITE);
+        modifyButton.setBackground(Color.pink); // Rouge clair
+        modifyButton.setBorder(new GestionCoursPanel.RoundedBorder(10)); // Bordure arrondie
+        modifyButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                modifyCourse();
+                clearFieldsAndSelection();
+            }
+        });
+
+        // Ajouter les boutons "Supprimer" et "Modifier" au rightPanel
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.setBackground(Color.WHITE);
+        buttonPanel.add(deleteButton);
+        buttonPanel.add(modifyButton);
+        rightPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        // Add panels to main panel
+        GridBagConstraints leftPanelConstraints = new GridBagConstraints();
+        leftPanelConstraints.gridx = 0;
+        leftPanelConstraints.gridy = 0;
+        leftPanelConstraints.weightx = 0.5;
+        leftPanelConstraints.fill = GridBagConstraints.BOTH;
+        leftPanelConstraints.insets = new Insets(10, 10, 10, 5);
+
+        mainPanel.add(leftPanel, leftPanelConstraints);
+
+        GridBagConstraints rightPanelConstraints = new GridBagConstraints();
+        rightPanelConstraints.gridx = 1;
+        rightPanelConstraints.gridy = 0;
+        rightPanelConstraints.weightx = 0.5;
+        rightPanelConstraints.fill = GridBagConstraints.BOTH;
+        rightPanelConstraints.insets = new Insets(10, 10, 10, 5);
+
+        mainPanel.add(rightPanel, rightPanelConstraints);
+
+        add(northPanel, BorderLayout.NORTH);
+        add(mainPanel, BorderLayout.CENTER);
+
+        // Load user data
         loadCourseData();
     }
 
@@ -287,7 +446,7 @@ public class GestionCoursPanel extends JPanel {
         heureDebutField.setText("");
         heureFinField.setText("");  
         table.clearSelection();
-        nbrLabel.setText("Nbr Cours : " + getNbrCours() + "  ");
+        //nbrLabel.setText("Nbr Cours : " + getNbrCours() + "  ");
     }
 
     private void populateFieldsFromSelectedCourse() {
@@ -335,5 +494,25 @@ public class GestionCoursPanel extends JPanel {
 
     private void handleError(String message) {
         JOptionPane.showMessageDialog(this, message, "Erreur", JOptionPane.ERROR_MESSAGE);
+    }
+    
+    public class RoundedBorder implements Border {
+        private int radius;
+
+        public RoundedBorder(int radius) {
+            this.radius = radius;
+        }
+
+        public Insets getBorderInsets(Component c) {
+            return new Insets(this.radius + 1, this.radius + 1, this.radius + 2, this.radius);
+        }
+
+        public boolean isBorderOpaque() {
+            return true;
+        }
+
+        public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+            g.drawRoundRect(x, y, width - 1, height - 1, radius, radius);
+        }
     }
 }

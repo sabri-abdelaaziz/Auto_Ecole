@@ -9,13 +9,19 @@ package auto_ecole.gui;
  * @author Abdellatif
  */
 import auto_ecole.database.MoniteursDao;
+
 import auto_ecole.model.Moniteur;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -34,19 +40,12 @@ public class GestionMoniteursPanel extends JPanel {
     public GestionMoniteursPanel() {
         setBackground(Color.WHITE);
         setLayout(new BorderLayout());
-
-        //top panel 
-        JPanel northPanel=new JPanel();
-        northPanel.setLayout(new BorderLayout());
-        northPanel.setBackground(new Color(255, 255, 255));
+        
+        
        
          try {
             MoniteurDao = new MoniteursDao();
-            int nbrMoniteurs = MoniteurDao.calculMoniteurs();
-             JLabel logoLabel = new JLabel("NBR Moniteurs :"+nbrMoniteurs);
-         logoLabel.setForeground(Color.red);
-        northPanel.add(logoLabel, BorderLayout.WEST);
-            
+           
         } catch (SQLException e) {
             handleError("Erreur lors du chargement des données : " + e.getMessage());
             e.printStackTrace();
@@ -55,152 +54,232 @@ public class GestionMoniteursPanel extends JPanel {
        
        
 
-    
-        // Create and add the welcome label
-        JLabel welcomeLabel = new JLabel(" La Gestion des Moniteurs");
-        welcomeLabel.setFont(new Font("Arial", Font.PLAIN, 22));
-       
-        welcomeLabel.setForeground(Color.red);
-        welcomeLabel.setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
-        welcomeLabel.setHorizontalAlignment(SwingConstants.CENTER); // Set text alignment to center
-      
-        northPanel.add(welcomeLabel, BorderLayout.CENTER);
+    // Top panel
+        JPanel northPanel = new JPanel(new BorderLayout());
+        northPanel.setBackground(Color.WHITE);
+        northPanel.setPreferredSize(new Dimension(northPanel.getPreferredSize().width, 100));
+        northPanel.setBorder(new CompoundBorder(new LineBorder(Color.BLACK), new EmptyBorder(10, 10, 10, 10)));
 
-        // Create and add the time label
-        JLabel timeLabel = new JLabel("-_$");
-       
-        timeLabel.setFont(new Font("Arial", Font.PLAIN, 22));
-        timeLabel.setForeground(Color.red);
-        timeLabel.setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
-        northPanel.add(timeLabel, BorderLayout.EAST);
-        
-        
-        
-        
-        
-        // Left Panel: Add Moniteur Form
+        // Title Label with icon
+        JLabel label = new JLabel("Gestion Moniteurs");
+        label.setFont(new Font("Times New Roman", Font.BOLD, 24));
+        label.setForeground(Color.PINK);
+        //new Color(0, 191, 255)
+        JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        titlePanel.setBackground(Color.WHITE);
+
+        // Loading and resizing the icon
+        ImageIcon icon = new ImageIcon("C:\\Users\\HP\\Desktop\\Projet_J2EE\\Auto_Ecole\\src\\moniteur.png");
+        Image image = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+        ImageIcon resizedIcon = new ImageIcon(image);
+        JLabel iconLabel = new JLabel(resizedIcon);
+
+        // Adding icon and title label to the title panel
+        titlePanel.add(iconLabel);
+        titlePanel.add(label);
+        northPanel.add(titlePanel, BorderLayout.CENTER);
+
+        // Main panel
+        JPanel mainPanel = new JPanel(new GridBagLayout());
+        mainPanel.setBackground(Color.WHITE);
+
+        // Left Panel: Add User Form
         JPanel leftPanel = new JPanel(new BorderLayout());
-        leftPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        leftPanel.setBorder(new CompoundBorder(new LineBorder(Color.BLACK), new EmptyBorder(20, 20, 20, 20)));
+        leftPanel.setBackground(Color.WHITE);
 
-        // Add Moniteur Form Components
-        JPanel formPanel = new JPanel(new GridLayout(5, 2, 5, 5));
-        formPanel.add(new JLabel("Nom:"));
-        nomField = new JTextField();
-        formPanel.add(nomField);
-        formPanel.add(new JLabel("Prénom:"));
-        prenomField = new JTextField();
-        formPanel.add(prenomField);
-        formPanel.add(new JLabel("Adresse:"));
-        adresseField = new JTextField();
-        formPanel.add(adresseField);
-        formPanel.add(new JLabel("Téléphone:"));
-        telephoneField = new JTextField();
-        formPanel.add(telephoneField);
+        // Add User Form Components
+        JPanel formPanel = new JPanel();
+        formPanel.setLayout(new GridBagLayout());
+        formPanel.setBackground(Color.white);
+        formPanel.setBorder(new CompoundBorder(new LineBorder(new Color(178, 34, 34)), new EmptyBorder(10, 10, 10, 10)));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(5, 10, 5, 10);
+
+        JLabel addUserLabel = new JLabel("Ajouter un candidat :");
+        addUserLabel.setFont(new Font("Times New Roman", Font.BOLD, 20));
+        addUserLabel.setForeground(new Color(0, 191, 255));
+        formPanel.add(addUserLabel, gbc);
+
+        gbc.gridy++;
+        gbc.anchor = GridBagConstraints.WEST; // Alignement à gauche
+        formPanel.add(new JLabel("Nom:"), gbc);
+        gbc.gridy++;
+        nomField = new JTextField(15);
+        nomField.setFont(new Font("Times New Roman", Font.PLAIN, 14)); // Police Times New Roman en noir
+        formPanel.add(nomField, gbc);
+        gbc.gridy++;
+        formPanel.add(new JLabel("Prénom:"), gbc);
+        gbc.gridy++;
+        prenomField = new JTextField(15);
+        prenomField.setFont(new Font("Times New Roman", Font.PLAIN, 14)); // Police Times New Roman en noir
+        formPanel.add(prenomField, gbc);
+        gbc.gridy++;
+        formPanel.add(new JLabel("Adresse:"), gbc);
+        gbc.gridy++;
+        adresseField = new JTextField(15);
+        adresseField.setFont(new Font("Times New Roman", Font.PLAIN, 14)); // Police Times New Roman en noir
+        formPanel.add(adresseField, gbc);
+        gbc.gridy++;
+        formPanel.add(new JLabel("Téléphone:"), gbc);
+        gbc.gridy++;
+        telephoneField = new JTextField(15);
+        telephoneField.setFont(new Font("Times New Roman", Font.PLAIN, 14)); // Police Times New Roman en noir
+        formPanel.add(telephoneField, gbc);
+
+
+        // RoundedBorder
+        formPanel.setBorder(new GestionMoniteursPanel.RoundedBorder(20));
+
+        // Create "Ajouter" button
         JButton addButton = new JButton("Ajouter");
+        addButton.setFont(new Font("Times New Roman", Font.BOLD, 14));
+        addButton.setForeground(Color.WHITE);
+        addButton.setBackground(new Color(0, 191, 255)); // Rouge clair
+        addButton.setBorder(new GestionMoniteursPanel.RoundedBorder(10)); // Bordure arrondie
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 addMoniteur();
+                clearFields();
             }
         });
-        formPanel.add(addButton);
+
+        // Create "Effacer" button
+        JButton clearButton = new JButton("Effacer");
+        clearButton.setFont(new Font("Times New Roman", Font.BOLD, 14));
+        clearButton.setForeground(Color.WHITE);
+        clearButton.setBackground(new Color(0, 191, 255)); // Rouge clair
+        clearButton.setBorder(new GestionMoniteursPanel.RoundedBorder(10)); // Bordure arrondie
+        clearButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                clearFields();
+            }
+        });
+
+        // Add buttons to form panel with GridBagLayout
+        gbc.gridy++;
+        gbc.gridx++;
+        gbc.insets = new Insets(5, 10, 5, 10); // Ajout d'un espace horizontal entre les boutons
+        formPanel.add(addButton, gbc);
+
+        // Add horizontal space between buttons
+        gbc.gridx++;
+        gbc.insets = new Insets(5, 10, 5, 10); // Ajout d'un espace horizontal entre les boutons
+        formPanel.add(clearButton, gbc);
+
         leftPanel.add(formPanel, BorderLayout.NORTH);
 
-        // Right Panel: Moniteur Table with Modify and Delete Buttons
+        // Right Panel: User Table with Modify and Delete Buttons
         JPanel rightPanel = new JPanel(new BorderLayout());
-        rightPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        rightPanel.setBorder(new CompoundBorder(new LineBorder(Color.BLACK), new EmptyBorder(20, 20, 20, 20)));
+        rightPanel.setBackground(Color.WHITE);
 
-        // Moniteur Table
+        // User Table
         tableModel = new DefaultTableModel();
-        
-    
-
         tableModel.addColumn("ID");
         tableModel.addColumn("Nom");
         tableModel.addColumn("Prénom");
         tableModel.addColumn("Adresse");
         tableModel.addColumn("Téléphone");
         table = new JTable(tableModel);
-        JScrollPane scrollPane = new JScrollPane(table);
-        rightPanel.add(scrollPane, BorderLayout.CENTER);
-
-        // Modify and Delete Buttons
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 5));
-        JButton modifyButton = new JButton("Modifier");
-        modifyButton.addActionListener(new ActionListener() {
+        table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                // Handle modify action
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    boolean isSelected = table.getSelectedRow() != -1;
+                    addButton.setEnabled(!isSelected);
+                }
+                populateFieldsFromSelectedMoniteur();
             }
         });
-        buttonPanel.add(modifyButton);
+        table.getTableHeader().setFont(new Font("Times New Roman", Font.BOLD, 14)); // Police Times New Roman en gras
+        table.getTableHeader().setBackground(Color.GRAY); // Fond de l'entête en gris
+        table.setBackground(Color.WHITE); // Fond du tableau en blanc
+        table.setFillsViewportHeight(true); // Remplir la hauteur de la vue
+
+        // Add table to scroll pane with rounded border
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(new Dimension(leftPanel.getPreferredSize().width, leftPanel.getPreferredSize().height)); // Même hauteur que leftPanel
+        scrollPane.setBorder(new GestionMoniteursPanel.RoundedBorder(20)); // Appliquer le RoundedBorder au JScrollPane
+        scrollPane.setBackground(Color.white);
+        rightPanel.add(scrollPane, BorderLayout.CENTER);
+
+        // Create "Supprimer" button
         JButton deleteButton = new JButton("Supprimer");
+        deleteButton.setFont(new Font("Times New Roman", Font.BOLD, 14));
+        deleteButton.setForeground(Color.WHITE);
+        deleteButton.setBackground(Color.GRAY); // Rouge clair
+        deleteButton.setBorder(new GestionMoniteursPanel.RoundedBorder(10)); // Bordure arrondie
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Handle delete action
+                int selectedRow = table.getSelectedRow();
+                if (selectedRow != -1) {
+                    int userId = (int) tableModel.getValueAt(selectedRow, 0);
+                    try {
+                        MoniteurDao.delete(userId);
+                        loadMoniteurData();
+                        clearFields();
+                        JOptionPane.showMessageDialog(GestionMoniteursPanel.this, "Moniteur supprimé avec succès.", "Suppression réussie", JOptionPane.INFORMATION_MESSAGE);
+                    } catch (SQLException ex) {
+                        handleError("Erreur lors de la suppression du moniteur : " + ex.getMessage());
+                        ex.printStackTrace();
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(GestionMoniteursPanel.this, "Veuillez sélectionner un moniteur à supprimer.", "Aucune sélection", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
+
+        // Create "Modifier" button
+        JButton modifyButton = new JButton("Modifier");
+        modifyButton.setFont(new Font("Times New Roman", Font.BOLD, 14));
+        modifyButton.setForeground(Color.WHITE);
+        modifyButton.setBackground(Color.GRAY); // Rouge clair
+        modifyButton.setBorder(new GestionMoniteursPanel.RoundedBorder(10)); // Bordure arrondie
+        modifyButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                modifyMoniteur();
+                clearFields();
+            }
+        });
+
+        // Ajouter les boutons "Supprimer" et "Modifier" au rightPanel
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.setBackground(Color.WHITE);
         buttonPanel.add(deleteButton);
+        buttonPanel.add(modifyButton);
         rightPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-        // Add Left and Right Panels to Main Panel
-        add(leftPanel, BorderLayout.WEST);
-        add(rightPanel, BorderLayout.CENTER);
-        add(northPanel,BorderLayout.NORTH);
+        // Add panels to main panel
+        GridBagConstraints leftPanelConstraints = new GridBagConstraints();
+        leftPanelConstraints.gridx = 0;
+        leftPanelConstraints.gridy = 0;
+        leftPanelConstraints.weightx = 0.5;
+        leftPanelConstraints.fill = GridBagConstraints.BOTH;
+        leftPanelConstraints.insets = new Insets(10, 10, 10, 5);
 
-        
-            // Customizing the appearance of the table (moved after table initialization)
-    table.getTableHeader().setBackground(Color.GREEN);
-    table.getTableHeader().setForeground(Color.WHITE);
-    table.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 18));
-    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-    centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-    table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer); // ID column
+        mainPanel.add(leftPanel, leftPanelConstraints);
 
-     // À l'intérieur du constructeur GestionMoniteursPanel()
+        GridBagConstraints rightPanelConstraints = new GridBagConstraints();
+        rightPanelConstraints.gridx = 1;
+        rightPanelConstraints.gridy = 0;
+        rightPanelConstraints.weightx = 0.5;
+        rightPanelConstraints.fill = GridBagConstraints.BOTH;
+        rightPanelConstraints.insets = new Insets(10, 10, 10, 5);
 
-// Ajouter un ListSelectionListener pour détecter la sélection d'une ligne dans la table
-table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-    @Override
-    public void valueChanged(ListSelectionEvent e) {
-        // Vérifier si une ligne est sélectionnée
-        if (!e.getValueIsAdjusting() && table.getSelectedRow() != -1) {
-            // Activer le bouton "Supprimer" si une ligne est sélectionnée
-            deleteButton.setEnabled(true);
-        } else {
-            // Désactiver le bouton "Supprimer" si aucune ligne n'est sélectionnée
-            deleteButton.setEnabled(false);
-        }
-    }
-});
+        mainPanel.add(rightPanel, rightPanelConstraints);
 
-// Ajouter un ActionListener pour le bouton "Supprimer"
-deleteButton.addActionListener(new ActionListener() {
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        // Récupérer l'index de la ligne sélectionnée
-        int selectedRow = table.getSelectedRow();
-        if (selectedRow != -1) {
-            // Récupérer l'ID de l'élément sélectionné dans la table
-            int id = (int) table.getValueAt(selectedRow, 0); // Supposant que l'ID est dans la première colonne
-            // Appeler la méthode de votre DAO pour supprimer l'élément par son ID
-            try {
-                
-                
-                MoniteurDao.deleteById(id);
-                // Recharger les données après la suppression
-                loadMoniteurData();
-            } catch (SQLException ex) {
-                handleError("Erreur lors de la suppression de l'élément : " + ex.getMessage());
-                ex.printStackTrace();
-            }
-        }
-    }
-});   
-        
-        
-        // Load Moniteur data
+        add(northPanel, BorderLayout.NORTH);
+        add(mainPanel, BorderLayout.CENTER);
+
+        // Load user data
         loadMoniteurData();
     }
 
@@ -220,8 +299,12 @@ deleteButton.addActionListener(new ActionListener() {
                 prenomField.setText("");
                 adresseField.setText("");
                 telephoneField.setText("");
+                
+                JOptionPane.showMessageDialog(this, "Moniteur ajouté avec succès.", "Ajout réussi",
+                JOptionPane.INFORMATION_MESSAGE);
+    
             } catch (SQLException ex) {
-                handleError("Erreur lors de l'ajout de l'utilisateur : " + ex.getMessage());
+                handleError("Erreur lors de l'ajout de moniteur : " + ex.getMessage());
                 ex.printStackTrace();
             }
         } else {
@@ -229,6 +312,44 @@ deleteButton.addActionListener(new ActionListener() {
         }
     }
 
+    // Method to modify the selected course
+    private void modifyMoniteur() {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow != -1) {
+            int moniteurId = (int) tableModel.getValueAt(selectedRow, 0);
+            try {
+                Moniteur selectedMoniteur = MoniteurDao.findMoniteurById(moniteurId);
+                if (selectedMoniteur != null) {
+                    
+                    String nom = nomField.getText();
+                    String prenom = prenomField.getText();
+                    String adresse = adresseField.getText();
+                    String telephone = telephoneField.getText();
+
+                    selectedMoniteur.setNom(nom);
+                    selectedMoniteur.setPrenom(prenom);
+                    selectedMoniteur.setAdresse(adresse);
+                    selectedMoniteur.setTelephone(telephone);
+                    
+                   
+                    MoniteurDao.update(selectedMoniteur);
+
+                    loadMoniteurData();
+                    JOptionPane.showMessageDialog(this, "Moniteur modifié avec succès.", "Modification réussie",
+                            JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Le cmoniteur sélectionné n'existe pas.", "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (SQLException ex) {
+                handleError("Erreur lors de la modification du moniteur : " + ex.getMessage());
+                ex.printStackTrace();
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Veuillez sélectionner un moniteur à modifier.", "Erreur",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
     // Method to load Moniteur data into the table
     private void loadMoniteurData() {
         try {
@@ -240,6 +361,29 @@ deleteButton.addActionListener(new ActionListener() {
             e.printStackTrace();
         }
     }
+    private void populateFieldsFromSelectedMoniteur() {
+        if (!table.getSelectionModel().getValueIsAdjusting()) {
+            int selectedRow = table.getSelectedRow();
+            int columnIndex = table.getColumnModel().getColumnIndex("Nom");
+            if (selectedRow != -1) {
+                int moniteurId = (int) tableModel.getValueAt(selectedRow, 0);
+                try {
+                    Moniteur selectedMoniteur = MoniteurDao.findMoniteurById(moniteurId);
+                    if (selectedMoniteur != null) {
+                        // Populate the text fields with the selected course's information
+                        nomField.setText(selectedMoniteur.getNom());
+                        prenomField.setText(selectedMoniteur.getPrenom());
+                        adresseField.setText(selectedMoniteur.getAdresse());
+                        telephoneField.setText(selectedMoniteur.getTelephone());
+
+                    }
+                } catch (SQLException ex) {
+                    handleError("Erreur lors de la récupération des données du cours : " + ex.getMessage());
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }
 
     // Method to update the table with Moniteur data
     private void updateTable(java.util.List<Moniteur> Moniteurs) {
@@ -249,8 +393,34 @@ deleteButton.addActionListener(new ActionListener() {
         }
     }
 
-    // Method to handle errors by displaying a message dialog
+    private void clearFields() {
+        nomField.setText("");
+        prenomField.setText("");
+        adresseField.setText("");
+        telephoneField.setText("");
+    }
+
     private void handleError(String message) {
         JOptionPane.showMessageDialog(this, message, "Erreur", JOptionPane.ERROR_MESSAGE);
+    }
+
+    public class RoundedBorder implements Border {
+        private int radius;
+
+        public RoundedBorder(int radius) {
+            this.radius = radius;
+        }
+
+        public Insets getBorderInsets(Component c) {
+            return new Insets(this.radius + 1, this.radius + 1, this.radius + 2, this.radius);
+        }
+
+        public boolean isBorderOpaque() {
+            return true;
+        }
+
+        public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+            g.drawRoundRect(x, y, width - 1, height - 1, radius, radius);
+        }
     }
 }

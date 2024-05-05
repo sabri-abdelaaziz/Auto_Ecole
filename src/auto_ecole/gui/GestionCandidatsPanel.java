@@ -1,5 +1,6 @@
 package auto_ecole.gui;
 
+import auto_ecole.database.MoniteursDao;
 import auto_ecole.database.UserDao;
 import auto_ecole.model.User;
 
@@ -31,7 +32,14 @@ public class GestionCandidatsPanel extends JPanel {
     public GestionCandidatsPanel() throws SQLException {
         setBackground(Color.WHITE);
         setLayout(new BorderLayout());
-
+        
+         try {
+            userDao = new UserDao();
+ 
+        } catch (SQLException e) {
+            handleError("Erreur lors du chargement des données : " + e.getMessage());
+            e.printStackTrace();
+        }
         // Top panel
         JPanel northPanel = new JPanel(new BorderLayout());
         northPanel.setBackground(Color.WHITE);
@@ -47,7 +55,7 @@ public class GestionCandidatsPanel extends JPanel {
 
         // Loading and resizing the icon
         ImageIcon icon = new ImageIcon("C:\\Users\\HP\\Desktop\\Projet_J2EE\\Auto_Ecole\\src\\candidat.png");
-        Image image = icon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        Image image = icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
         ImageIcon resizedIcon = new ImageIcon(image);
         JLabel iconLabel = new JLabel(resizedIcon);
 
