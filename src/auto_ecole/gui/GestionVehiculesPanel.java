@@ -13,8 +13,11 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 public class GestionVehiculesPanel extends JPanel {
+
     private DefaultTableModel tableModel;
     private JTable table;
     private VehiculeDao vehiculeDao;
@@ -26,14 +29,13 @@ public class GestionVehiculesPanel extends JPanel {
         setBackground(Color.WHITE);
         setLayout(new BorderLayout());
 
-         try {
-        vehiculeDao = new VehiculeDao();
-    } catch (SQLException ex) {
-        handleError("Erreur lors de l'initialisation de la DAO de véhicule : " + ex.getMessage());
-        ex.printStackTrace();
-    }
-         
-         
+        try {
+            vehiculeDao = new VehiculeDao();
+        } catch (SQLException ex) {
+            handleError("Erreur lors de l'initialisation de la DAO de véhicule : " + ex.getMessage());
+            ex.printStackTrace();
+        }
+
         // Top panel
         JPanel northPanel = new JPanel(new BorderLayout());
         northPanel.setBackground(Color.WHITE);
@@ -82,7 +84,7 @@ public class GestionVehiculesPanel extends JPanel {
         addUserLabel.setFont(new Font("Times New Roman", Font.BOLD, 20));
         addUserLabel.setForeground(Color.GRAY);
         formPanel.add(addUserLabel, gbc);
-        
+
         gbc.gridy++;
         gbc.anchor = GridBagConstraints.WEST; // Alignement à gauche
         formPanel.add(new JLabel("Marque:"), gbc);
@@ -102,8 +104,6 @@ public class GestionVehiculesPanel extends JPanel {
         anneeFabricationField = new JTextField(15);
         anneeFabricationField.setFont(new Font("Times New Roman", Font.PLAIN, 14)); // Police Times New Roman en noir
         formPanel.add(anneeFabricationField, gbc);
-        
-
 
         // RoundedBorder
         formPanel.setBorder(new RoundedBorder(20));
@@ -159,12 +159,22 @@ public class GestionVehiculesPanel extends JPanel {
         tableModel.addColumn("Marque");
         tableModel.addColumn("Modele");
         tableModel.addColumn("Année de Fabrication");
-        
+
         table = new JTable(tableModel);
         table.getTableHeader().setFont(new Font("Times New Roman", Font.BOLD, 14)); // Police Times New Roman en gras
         table.getTableHeader().setBackground(new Color(178, 34, 34)); // Fond de l'entête en gris
         table.setBackground(Color.WHITE); // Fond du tableau en blanc
         table.setFillsViewportHeight(true); // Remplir la hauteur de la vue
+        table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    boolean isSelected = table.getSelectedRow() != -1;
+                    addButton.setEnabled(!isSelected);
+                }
+                populateFieldsFromSelectedVehicule();
+            }
+        });
 
         // Add table to scroll pane with rounded border
         JScrollPane scrollPane = new JScrollPane(table);
@@ -195,7 +205,7 @@ public class GestionVehiculesPanel extends JPanel {
         modifyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                populateFieldsFromSelectedVehicule();
+                modifyVehicule();
             }
         });
 
@@ -232,42 +242,40 @@ public class GestionVehiculesPanel extends JPanel {
         loadVehiculeData();
     }
 
-     // Méthode pour ajouter un nouveau véhicule
+    // Méthode pour ajouter un nouveau véhicule
     private void addVehicule() {
-    String marque = marqueField.getText();
-    String modele = modeleField.getText();
-    String anneeFabricationText = anneeFabricationField.getText();
-    
-    // Vérifier si l'année de fabrication est un nombre valide
-    if (!anneeFabricationText.matches("\\d+")) {
-        JOptionPane.showMessageDialog(this, "L'année de fabrication doit être un nombre entier.", "Erreur", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-    
-    int anneeFabrication = Integer.parseInt(anneeFabricationText);
-    
-    if (!marque.isEmpty() && !modele.isEmpty()) {
-        try {
-            Vehicule newVehicule = new Vehicule(marque, modele, anneeFabrication);
-            vehiculeDao.save(newVehicule);
-            loadVehiculeData();
-            clearFields();
-            
-            JOptionPane.showMessageDialog(this, "Véhicule ajouté avec succès.", "Ajout réussi",
-                JOptionPane.INFORMATION_MESSAGE);
-            
-        } catch (SQLException ex) {
-            handleError("Erreur lors de l'ajout du véhicule : " + ex.getMessage());
-            ex.printStackTrace();
+        String marque = marqueField.getText();
+        String modele = modeleField.getText();
+        String anneeFabricationText = anneeFabricationField.getText();
+
+        // Vérifier si l'année de fabrication est un nombre valide
+        if (!anneeFabricationText.matches("\\d+")) {
+            JOptionPane.showMessageDialog(this, "L'année de fabrication doit être un nombre entier.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            return;
         }
-    } else {
-        JOptionPane.showMessageDialog(this, "Veuillez remplir tous les champs.", "Erreur", JOptionPane.ERROR_MESSAGE);
+
+        int anneeFabrication = Integer.parseInt(anneeFabricationText);
+
+        if (!marque.isEmpty() && !modele.isEmpty()) {
+            try {
+                Vehicule newVehicule = new Vehicule(marque, modele, anneeFabrication);
+                vehiculeDao.save(newVehicule);
+                loadVehiculeData();
+                clearFields();
+
+                JOptionPane.showMessageDialog(this, "Véhicule ajouté avec succès.", "Ajout réussi",
+                        JOptionPane.INFORMATION_MESSAGE);
+
+            } catch (SQLException ex) {
+                handleError("Erreur lors de l'ajout du véhicule : " + ex.getMessage());
+                ex.printStackTrace();
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Veuillez remplir tous les champs.", "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
     }
-    }
 
-
-
-      // Méthode pour charger les données des véhicules dans le tableau
+    // Méthode pour charger les données des véhicules dans le tableau
     private void loadVehiculeData() {
         try {
             vehiculeDao = new VehiculeDao();
@@ -296,9 +304,10 @@ public class GestionVehiculesPanel extends JPanel {
         marqueField.setText("");
         modeleField.setText("");
         anneeFabricationField.setText("");
-        
+        table.clearSelection();
+
     }
-    
+
     // Méthode pour supprimer un véhicule
     private void deleteVehicule() {
         int selectedRow = table.getSelectedRow();
@@ -315,58 +324,57 @@ public class GestionVehiculesPanel extends JPanel {
             JOptionPane.showMessageDialog(this, "Veuillez sélectionner un véhicule à supprimer.", "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
+
     private void modifyVehicule() {
-    int selectedRow = table.getSelectedRow();
-    if (selectedRow != -1) {
-        int vehiculeId = (int) tableModel.getValueAt(selectedRow, 0);
-        String marque = marqueField.getText();
-        String modele = modeleField.getText();
-        String anneeFabricationText = anneeFabricationField.getText();
-        if (!marque.isEmpty() && !modele.isEmpty() && !anneeFabricationText.isEmpty()) {
-            try {
-                int anneeFabrication = Integer.parseInt(anneeFabricationText);
-                Vehicule modifiedVehicule = new Vehicule(vehiculeId, marque, modele, anneeFabrication);
-                vehiculeDao.update(modifiedVehicule);
-                loadVehiculeData(); // Recharger les données des véhicules après la modification
-                clearFields(); // Effacer les champs du formulaire
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "L'année de fabrication doit être un nombre entier.", "Erreur", JOptionPane.ERROR_MESSAGE);
-            } catch (SQLException ex) {
-                handleError("Erreur lors de la modification du véhicule : " + ex.getMessage());
-                ex.printStackTrace();
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "Veuillez remplir tous les champs.", "Erreur", JOptionPane.ERROR_MESSAGE);
-        }
-    } else {
-        JOptionPane.showMessageDialog(this, "Veuillez sélectionner un véhicule à modifier.", "Erreur", JOptionPane.ERROR_MESSAGE);
-    }
-}
-
-
-    private void populateFieldsFromSelectedVehicule() {
-    if (!table.getSelectionModel().getValueIsAdjusting()) {
         int selectedRow = table.getSelectedRow();
         if (selectedRow != -1) {
             int vehiculeId = (int) tableModel.getValueAt(selectedRow, 0);
-            try {
-                Vehicule selectedVehicule = vehiculeDao.find(vehiculeId);
-                if (selectedVehicule != null) {
-                    marqueField.setText(selectedVehicule.getMarque());
-                    modeleField.setText(selectedVehicule.getModele());
-                    anneeFabricationField.setText(String.valueOf(selectedVehicule.getAnneeFabrication()));
+            String marque = marqueField.getText();
+            String modele = modeleField.getText();
+            String anneeFabricationText = anneeFabricationField.getText();
+            if (!marque.isEmpty() && !modele.isEmpty() && !anneeFabricationText.isEmpty()) {
+                try {
+                    int anneeFabrication = Integer.parseInt(anneeFabricationText);
+                    Vehicule modifiedVehicule = new Vehicule(vehiculeId, marque, modele, anneeFabrication);
+                    vehiculeDao.update(modifiedVehicule);
+                    loadVehiculeData(); // Recharger les données des véhicules après la modification
+                    clearFields(); // Effacer les champs du formulaire
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, "L'année de fabrication doit être un nombre entier.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                } catch (SQLException ex) {
+                    handleError("Erreur lors de la modification du véhicule : " + ex.getMessage());
+                    ex.printStackTrace();
                 }
-            } catch (SQLException ex) {
-                handleError("Erreur lors de la récupération des données du véhicule : " + ex.getMessage());
-                ex.printStackTrace();
+            } else {
+                JOptionPane.showMessageDialog(this, "Veuillez remplir tous les champs.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Veuillez sélectionner un véhicule à modifier.", "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void populateFieldsFromSelectedVehicule() {
+        if (!table.getSelectionModel().getValueIsAdjusting()) {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow != -1) {
+                int vehiculeId = (int) tableModel.getValueAt(selectedRow, 0);
+                try {
+                    Vehicule selectedVehicule = vehiculeDao.find(vehiculeId);
+                    if (selectedVehicule != null) {
+                        marqueField.setText(selectedVehicule.getMarque());
+                        modeleField.setText(selectedVehicule.getModele());
+                        anneeFabricationField.setText(String.valueOf(selectedVehicule.getAnneeFabrication()));
+                    }
+                } catch (SQLException ex) {
+                    handleError("Erreur lors de la récupération des données du véhicule : " + ex.getMessage());
+                    ex.printStackTrace();
+                }
             }
         }
     }
-}
-
 
     public class RoundedBorder implements Border {
+
         private int radius;
 
         public RoundedBorder(int radius) {

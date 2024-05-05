@@ -147,7 +147,7 @@ public class VehiculeDao {
     }
 
     public void update(Vehicule vehicule) throws SQLException {
-    String query = "UPDATE vehicules SET marque = ?, modele = ?, annee_fabrication = ? WHERE id = ?";
+    String query = "UPDATE vehicule SET marque = ?, modele = ?, annee_fabrication = ? WHERE id = ?";
     try (PreparedStatement statement = connection.prepareStatement(query)) {
         statement.setString(1, vehicule.getMarque());
         statement.setString(2, vehicule.getModele());

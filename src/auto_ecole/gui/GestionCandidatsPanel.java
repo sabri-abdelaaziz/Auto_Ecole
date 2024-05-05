@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 
 public class GestionCandidatsPanel extends JPanel {
+
     private DefaultTableModel tableModel;
     private JTable table;
 
@@ -106,7 +107,6 @@ public class GestionCandidatsPanel extends JPanel {
         telephoneField.setFont(new Font("Times New Roman", Font.PLAIN, 14)); // Police Times New Roman en noir
         formPanel.add(telephoneField, gbc);
 
-
         // RoundedBorder
         formPanel.setBorder(new RoundedBorder(20));
 
@@ -119,12 +119,8 @@ public class GestionCandidatsPanel extends JPanel {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    addUser();
-                    clearFields();
-                } catch (SQLException ex) {
-                    Logger.getLogger(GestionCandidatsPanel.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                addUser();
+                clearFields();
             }
         });
 
@@ -171,6 +167,16 @@ public class GestionCandidatsPanel extends JPanel {
         table.getTableHeader().setBackground(Color.GRAY); // Fond de l'entête en gris
         table.setBackground(Color.WHITE); // Fond du tableau en blanc
         table.setFillsViewportHeight(true); // Remplir la hauteur de la vue
+        table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    boolean isSelected = table.getSelectedRow() != -1;
+                    addButton.setEnabled(!isSelected);
+                }
+                populateFieldsFromSelectedUser();
+            }
+        });
 
         // Add table to scroll pane with rounded border
         JScrollPane scrollPane = new JScrollPane(table);
@@ -188,20 +194,8 @@ public class GestionCandidatsPanel extends JPanel {
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int selectedRow = table.getSelectedRow();
-                if (selectedRow != -1) {
-                    int userId = (int) tableModel.getValueAt(selectedRow, 0);
-                    try {
-                        userDao.delete(userId);
-                        loadUserData();
-                        JOptionPane.showMessageDialog(GestionCandidatsPanel.this, "Candidat supprimé avec succès.", "Suppression réussie", JOptionPane.INFORMATION_MESSAGE);
-                    } catch (SQLException ex) {
-                        handleError("Erreur lors de la suppression du candidat : " + ex.getMessage());
-                        ex.printStackTrace();
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(GestionCandidatsPanel.this, "Veuillez sélectionner un candidat à supprimer.", "Aucune sélection", JOptionPane.ERROR_MESSAGE);
-                }
+                deleteUser();
+                clearFields();
             }
         });
 
@@ -214,7 +208,8 @@ public class GestionCandidatsPanel extends JPanel {
         modifyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                populateFieldsFromSelectedUser();
+                modifyUser();
+                clearFields();
             }
         });
 
@@ -251,45 +246,102 @@ public class GestionCandidatsPanel extends JPanel {
         loadUserData();
     }
 
-    private void addUser() throws SQLException {
-    String nom = nomField.getText();
-    String prenom = prenomField.getText();
-    String adresse = adresseField.getText();
-    String telephone = telephoneField.getText();
-    // Vérifier si l'année de fabrication est un nombre valide
-    if (!telephone.matches("\\d+")) {
-        JOptionPane.showMessageDialog(this, "Le numéro de téléphone doit être un nombre entier.", "Erreur", JOptionPane.ERROR_MESSAGE);
-        return;
+    private void modifyUser() {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow != -1) {
+            int id = (int) tableModel.getValueAt(selectedRow, 0);
+            try {
+                User selectedUser = userDao.find(id);
+                if (selectedUser != null) {
+                    String nom = nomField.getText();
+                    String prenom = prenomField.getText();
+                    String adresse = adresseField.getText();
+                    String telephone = telephoneField.getText();
+                    
+                    selectedUser.setNom(nom);
+                    selectedUser.setPrenom(prenom);
+                    selectedUser.setAdresse(adresse);
+                    selectedUser.setTelephone(telephone);
+
+                    userDao.update(selectedUser);
+
+                    loadUserData();
+                    JOptionPane.showMessageDialog(this, "Cours modifié avec succès.", "Modification réussie",
+                            JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Le cours sélectionné n'existe pas.", "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (SQLException ex) {
+                handleError("Erreur lors de la modification du cours : " + ex.getMessage());
+                ex.printStackTrace();
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Veuillez sélectionner un cours à modifier.", "Erreur",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
-    
-    int tele = Integer.parseInt(telephone);
-    if (!nom.isEmpty() && !prenom.isEmpty() && !adresse.isEmpty() && !telephone.isEmpty()) {
-        User newUser = new User(nom, prenom, adresse, tele);
-        userDao.save(newUser);
-        loadUserData();
-        clearFields();
-        
-        // Récupérer le dernier ID inséré dans la base de données
-        int lastInsertedId = userDao.getLastInsertedId(); // À implémenter dans votre DAO
-        
-        // Ajouter la nouvelle ligne à la fin du tableau avec l'ID incrémenté
-        tableModel.addRow(new Object[]{lastInsertedId, nom, prenom, adresse, tele}); // Ajoutez la nouvelle ligne à la fin
-        
-        JOptionPane.showMessageDialog(this, "Utilisateur ajouté avec succès.", "Ajout réussi",
-                JOptionPane.INFORMATION_MESSAGE);
-    } else {
-        JOptionPane.showMessageDialog(this, "Veuillez remplir tous les champs.", "Erreur",
-                JOptionPane.ERROR_MESSAGE);
+
+    private void deleteUser() {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow != -1) {
+            int id = (int) tableModel.getValueAt(selectedRow, 0);
+            try {
+                userDao.delete(id);
+                tableModel.removeRow(selectedRow);
+                JOptionPane.showMessageDialog(this, "Cours supprimé avec succès.", "Suppression réussie",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } catch (SQLException ex) {
+                handleError("Erreur lors de la suppression du cours : " + ex.getMessage());
+                ex.printStackTrace();
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Veuillez sélectionner un cours à supprimer.", "Erreur",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
-}
 
+    private void addUser() {
+        String nom = nomField.getText();
+        String prenom = prenomField.getText();
+        String adresse = adresseField.getText();
+        String telephone = telephoneField.getText();
+        // Vérifier si l'année de fabrication est un nombre valide
+        if (!telephone.matches("\\d+")) {
+            JOptionPane.showMessageDialog(this, "Le numéro de téléphone doit être un nombre entier.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
+        int tele = Integer.parseInt(telephone);
+        if (!nom.isEmpty() && !prenom.isEmpty() && !adresse.isEmpty() && !telephone.isEmpty()) {
+            try {
+                User newUser = new User(nom, prenom, adresse, telephone);
+                userDao.save(newUser);
+                loadUserData();
+                clearFields();
+            } catch (Exception ex) {
+                handleError("Erreur lors de la récupération des données de l'utilisateur : " + ex.getMessage());
+                ex.printStackTrace();
+            }
 
+            JOptionPane.showMessageDialog(this, "Utilisateur ajouté avec succès.", "Ajout réussi",
+                    JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Veuillez remplir tous les champs.", "Erreur",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
     private void loadUserData() throws SQLException {
-        userDao = new UserDao();
-        List<User> users = userDao.getAll();
-        updateTable(users);
+        try {
+            userDao = new UserDao();
+            List<User> users = userDao.getAll();
+            updateTable(users);
+        } catch (Exception ex) {
+            handleError("Erreur lors de Load Data : " + ex.getMessage());
+            ex.printStackTrace();
+        }
+
     }
 
     private void updateTable(List<User> users) {
@@ -325,6 +377,7 @@ public class GestionCandidatsPanel extends JPanel {
         prenomField.setText("");
         adresseField.setText("");
         telephoneField.setText("");
+        table.clearSelection();
     }
 
     private void handleError(String message) {
@@ -332,6 +385,7 @@ public class GestionCandidatsPanel extends JPanel {
     }
 
     public class RoundedBorder implements Border {
+
         private int radius;
 
         public RoundedBorder(int radius) {
