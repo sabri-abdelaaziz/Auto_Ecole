@@ -1,10 +1,12 @@
 package auto_ecole.gui;
+
 import auto_ecole.database.UserDao;
 import auto_ecole.model.User;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.border.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,128 +14,150 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 
 public class GestionCandidatsPanel extends JPanel {
     private DefaultTableModel tableModel;
     private JTable table;
 
-    private JLabel nbrLabel;
-
-    private UserDao userDao;
     private JTextField nomField;
     private JTextField prenomField;
     private JTextField adresseField;
     private JTextField telephoneField;
 
+    private UserDao userDao;
+
     public GestionCandidatsPanel() throws SQLException {
         setBackground(Color.WHITE);
         setLayout(new BorderLayout());
 
-        //top panel
+        // Top panel
         JPanel northPanel = new JPanel(new BorderLayout());
+        northPanel.setBackground(Color.WHITE);
+        northPanel.setPreferredSize(new Dimension(northPanel.getPreferredSize().width, 100));
+        northPanel.setBorder(new CompoundBorder(new LineBorder(Color.BLACK), new EmptyBorder(10, 10, 10, 10)));
 
-        nbrLabel = new JLabel("Nbr Candidats : " + getNbrCandidats() + "  ");
-        nbrLabel.setFont(new Font("Arial", Font.BOLD, 12));
-        northPanel.add(nbrLabel, BorderLayout.EAST);
-
+        // Title Label with icon
         JLabel label = new JLabel("Gestion Candidats");
-        label.setFont(new Font("Arial", Font.BOLD, 20));
-        label.setHorizontalAlignment(SwingConstants.CENTER);
-        northPanel.add(label, BorderLayout.CENTER);
+        label.setFont(new Font("Times New Roman", Font.BOLD, 24));
+        label.setForeground(new Color(0, 191, 255));
+        JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        titlePanel.setBackground(Color.WHITE);
+
+        // Loading and resizing the icon
+        ImageIcon icon = new ImageIcon("C:\\Users\\HP\\Desktop\\Projet_J2EE\\Auto_Ecole\\src\\candidat.png");
+        Image image = icon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        ImageIcon resizedIcon = new ImageIcon(image);
+        JLabel iconLabel = new JLabel(resizedIcon);
+
+        // Adding icon and title label to the title panel
+        titlePanel.add(iconLabel);
+        titlePanel.add(label);
+        northPanel.add(titlePanel, BorderLayout.CENTER);
+
+        // Main panel
+        JPanel mainPanel = new JPanel(new GridBagLayout());
+        mainPanel.setBackground(Color.WHITE);
 
         // Left Panel: Add User Form
         JPanel leftPanel = new JPanel(new BorderLayout());
-        leftPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        leftPanel.setBorder(new CompoundBorder(new LineBorder(Color.BLACK), new EmptyBorder(20, 20, 20, 20)));
+        leftPanel.setBackground(Color.WHITE);
 
         // Add User Form Components
-        JPanel formPanel = new JPanel(new GridLayout(6, 2, 5, 5));
-        formPanel.add(new JLabel("Nom:"));
-        nomField = new JTextField();
-        formPanel.add(nomField);
-        formPanel.add(new JLabel("Prénom:"));
-        prenomField = new JTextField();
-        formPanel.add(prenomField);
-        formPanel.add(new JLabel("Adresse:"));
-        adresseField = new JTextField();
-        formPanel.add(adresseField);
-        formPanel.add(new JLabel("Téléphone:"));
-        telephoneField = new JTextField();
-        formPanel.add(telephoneField);
+        JPanel formPanel = new JPanel();
+        formPanel.setLayout(new GridBagLayout());
+        formPanel.setBackground(Color.white);
+        formPanel.setBorder(new CompoundBorder(new LineBorder(new Color(178, 34, 34)), new EmptyBorder(10, 10, 10, 10)));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(5, 10, 5, 10);
 
+        JLabel addUserLabel = new JLabel("Ajouter un candidat :");
+        addUserLabel.setFont(new Font("Times New Roman", Font.BOLD, 20));
+        addUserLabel.setForeground(new Color(178, 34, 34));
+        formPanel.add(addUserLabel, gbc);
+
+        gbc.gridy++;
+        gbc.anchor = GridBagConstraints.WEST; // Alignement à gauche
+        formPanel.add(new JLabel("Nom:"), gbc);
+        gbc.gridy++;
+        nomField = new JTextField(15);
+        nomField.setFont(new Font("Times New Roman", Font.PLAIN, 14)); // Police Times New Roman en noir
+        formPanel.add(nomField, gbc);
+        gbc.gridy++;
+        formPanel.add(new JLabel("Prénom:"), gbc);
+        gbc.gridy++;
+        prenomField = new JTextField(15);
+        prenomField.setFont(new Font("Times New Roman", Font.PLAIN, 14)); // Police Times New Roman en noir
+        formPanel.add(prenomField, gbc);
+        gbc.gridy++;
+        formPanel.add(new JLabel("Adresse:"), gbc);
+        gbc.gridy++;
+        adresseField = new JTextField(15);
+        adresseField.setFont(new Font("Times New Roman", Font.PLAIN, 14)); // Police Times New Roman en noir
+        formPanel.add(adresseField, gbc);
+        gbc.gridy++;
+        formPanel.add(new JLabel("Téléphone:"), gbc);
+        gbc.gridy++;
+        telephoneField = new JTextField(15);
+        telephoneField.setFont(new Font("Times New Roman", Font.PLAIN, 14)); // Police Times New Roman en noir
+        formPanel.add(telephoneField, gbc);
+
+
+        // RoundedBorder
+        formPanel.setBorder(new RoundedBorder(20));
+
+        // Create "Ajouter" button
         JButton addButton = new JButton("Ajouter");
+        addButton.setFont(new Font("Times New Roman", Font.BOLD, 14));
+        addButton.setForeground(Color.WHITE);
+        addButton.setBackground(new Color(178, 34, 34)); // Rouge clair
+        addButton.setBorder(new RoundedBorder(10)); // Bordure arrondie
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     addUser();
-                } catch (SQLException ex) {
-                    Logger.getLogger(GestionCandidatsPanel.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                try {
-                    clearFieldsAndSelection();
+                    clearFields();
                 } catch (SQLException ex) {
                     Logger.getLogger(GestionCandidatsPanel.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
-        formPanel.add(addButton);
 
+        // Create "Effacer" button
         JButton clearButton = new JButton("Effacer");
+        clearButton.setFont(new Font("Times New Roman", Font.BOLD, 14));
+        clearButton.setForeground(Color.WHITE);
+        clearButton.setBackground(new Color(178, 34, 34)); // Rouge clair
+        clearButton.setBorder(new RoundedBorder(10)); // Bordure arrondie
         clearButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    clearFieldsAndSelection();
-                } catch (SQLException ex) {
-                    Logger.getLogger(GestionCandidatsPanel.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                clearFields();
             }
         });
-        formPanel.add(clearButton);
 
-        JButton modifyButton = new JButton("Modifier");
-        modifyButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    modifyUser();
-                } catch (SQLException ex) {
-                    Logger.getLogger(GestionCandidatsPanel.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                try {
-                    clearFieldsAndSelection();
-                } catch (SQLException ex) {
-                    Logger.getLogger(GestionCandidatsPanel.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
-        formPanel.add(modifyButton);
+        // Add buttons to form panel with GridBagLayout
+        gbc.gridy++;
+        gbc.gridx++;
+        gbc.insets = new Insets(5, 10, 5, 10); // Ajout d'un espace horizontal entre les boutons
+        formPanel.add(addButton, gbc);
 
-        JButton deleteButton = new JButton("Supprimer");
-        deleteButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    deleteUser();
-                } catch (SQLException ex) {
-                    Logger.getLogger(GestionCandidatsPanel.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                try {
-                    clearFieldsAndSelection();
-                } catch (SQLException ex) {
-                    Logger.getLogger(GestionCandidatsPanel.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
-        formPanel.add(deleteButton);
+        // Add horizontal space between buttons
+        gbc.gridx++;
+        gbc.insets = new Insets(5, 10, 5, 10); // Ajout d'un espace horizontal entre les boutons
+        formPanel.add(clearButton, gbc);
 
         leftPanel.add(formPanel, BorderLayout.NORTH);
 
         // Right Panel: User Table with Modify and Delete Buttons
         JPanel rightPanel = new JPanel(new BorderLayout());
-        rightPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        rightPanel.setBorder(new CompoundBorder(new LineBorder(Color.BLACK), new EmptyBorder(20, 20, 20, 20)));
+        rightPanel.setBackground(Color.WHITE);
 
         // User Table
         tableModel = new DefaultTableModel();
@@ -143,90 +167,124 @@ public class GestionCandidatsPanel extends JPanel {
         tableModel.addColumn("Adresse");
         tableModel.addColumn("Téléphone");
         table = new JTable(tableModel);
-        table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+        table.getTableHeader().setFont(new Font("Times New Roman", Font.BOLD, 14)); // Police Times New Roman en gras
+        table.getTableHeader().setBackground(Color.GRAY); // Fond de l'entête en gris
+        table.setBackground(Color.WHITE); // Fond du tableau en blanc
+        table.setFillsViewportHeight(true); // Remplir la hauteur de la vue
+
+        // Add table to scroll pane with rounded border
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(new Dimension(leftPanel.getPreferredSize().width, leftPanel.getPreferredSize().height)); // Même hauteur que leftPanel
+        scrollPane.setBorder(new RoundedBorder(20)); // Appliquer le RoundedBorder au JScrollPane
+        scrollPane.setBackground(Color.white);
+        rightPanel.add(scrollPane, BorderLayout.CENTER);
+
+        // Create "Supprimer" button
+        JButton deleteButton = new JButton("Supprimer");
+        deleteButton.setFont(new Font("Times New Roman", Font.BOLD, 14));
+        deleteButton.setForeground(Color.WHITE);
+        deleteButton.setBackground(Color.GRAY); // Rouge clair
+        deleteButton.setBorder(new RoundedBorder(10)); // Bordure arrondie
+        deleteButton.addActionListener(new ActionListener() {
             @Override
-            public void valueChanged(ListSelectionEvent e) {
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = table.getSelectedRow();
+                if (selectedRow != -1) {
+                    int userId = (int) tableModel.getValueAt(selectedRow, 0);
+                    try {
+                        userDao.delete(userId);
+                        loadUserData();
+                        JOptionPane.showMessageDialog(GestionCandidatsPanel.this, "Candidat supprimé avec succès.", "Suppression réussie", JOptionPane.INFORMATION_MESSAGE);
+                    } catch (SQLException ex) {
+                        handleError("Erreur lors de la suppression du candidat : " + ex.getMessage());
+                        ex.printStackTrace();
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(GestionCandidatsPanel.this, "Veuillez sélectionner un candidat à supprimer.", "Aucune sélection", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        // Create "Modifier" button
+        JButton modifyButton = new JButton("Modifier");
+        modifyButton.setFont(new Font("Times New Roman", Font.BOLD, 14));
+        modifyButton.setForeground(Color.WHITE);
+        modifyButton.setBackground(Color.GRAY); // Rouge clair
+        modifyButton.setBorder(new RoundedBorder(10)); // Bordure arrondie
+        modifyButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 populateFieldsFromSelectedUser();
             }
         });
-        JScrollPane scrollPane = new JScrollPane(table);
-        rightPanel.add(scrollPane, BorderLayout.CENTER);
 
-        // Add Panels to Main Panel
+        // Ajouter les boutons "Supprimer" et "Modifier" au rightPanel
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.setBackground(Color.WHITE);
+        buttonPanel.add(deleteButton);
+        buttonPanel.add(modifyButton);
+        rightPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        // Add panels to main panel
+        GridBagConstraints leftPanelConstraints = new GridBagConstraints();
+        leftPanelConstraints.gridx = 0;
+        leftPanelConstraints.gridy = 0;
+        leftPanelConstraints.weightx = 0.5;
+        leftPanelConstraints.fill = GridBagConstraints.BOTH;
+        leftPanelConstraints.insets = new Insets(10, 10, 10, 5);
+
+        mainPanel.add(leftPanel, leftPanelConstraints);
+
+        GridBagConstraints rightPanelConstraints = new GridBagConstraints();
+        rightPanelConstraints.gridx = 1;
+        rightPanelConstraints.gridy = 0;
+        rightPanelConstraints.weightx = 0.5;
+        rightPanelConstraints.fill = GridBagConstraints.BOTH;
+        rightPanelConstraints.insets = new Insets(10, 10, 10, 5);
+
+        mainPanel.add(rightPanel, rightPanelConstraints);
+
         add(northPanel, BorderLayout.NORTH);
-        add(leftPanel, BorderLayout.WEST);
-        add(rightPanel, BorderLayout.CENTER);
+        add(mainPanel, BorderLayout.CENTER);
 
         // Load user data
         loadUserData();
     }
 
     private void addUser() throws SQLException {
-        String nom = nomField.getText();
-        String prenom = prenomField.getText();
-        String adresse = adresseField.getText();
-        String telephone = telephoneField.getText();
-        if (!nom.isEmpty() && !prenom.isEmpty() && !adresse.isEmpty() && !telephone.isEmpty()) {
-            User newUser = new User(nom, prenom, adresse, telephone);
-            userDao.save(newUser);
-            loadUserData();
-            JOptionPane.showMessageDialog(this, "Utilisateur ajouté avec succès.", "Ajout réussi",
-                    JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(this, "Veuillez remplir tous les champs.", "Erreur",
-                    JOptionPane.ERROR_MESSAGE);
-        }
+    String nom = nomField.getText();
+    String prenom = prenomField.getText();
+    String adresse = adresseField.getText();
+    String telephone = telephoneField.getText();
+    // Vérifier si l'année de fabrication est un nombre valide
+    if (!telephone.matches("\\d+")) {
+        JOptionPane.showMessageDialog(this, "Le numéro de téléphone doit être un nombre entier.", "Erreur", JOptionPane.ERROR_MESSAGE);
+        return;
     }
-
-    private void modifyUser() throws SQLException {
-        int selectedRow = table.getSelectedRow();
-        if (selectedRow != -1) {
-            int userId = (int) tableModel.getValueAt(selectedRow, 0);
-            User selectedUser = userDao.find(userId);
-            if (selectedUser != null) {
-                String nom = nomField.getText();
-                String prenom = prenomField.getText();
-                String adresse = adresseField.getText();
-                String telephone = telephoneField.getText();
-                selectedUser.setNom(nom);
-                selectedUser.setPrenom(prenom);
-                selectedUser.setAdresse(adresse);
-                selectedUser.setTelephone(telephone);
-                
-                userDao.update(selectedUser);
-                
-                loadUserData();
-                JOptionPane.showMessageDialog(this, "Utilisateur modifié avec succès.", "Modification réussie",
-                        JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(this, "L'utilisateur sélectionné n'existe pas.", "Erreur",
-                        JOptionPane.ERROR_MESSAGE);
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "Veuillez sélectionner un utilisateur à modifier.", "Erreur",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private void deleteUser() throws SQLException {
-        int selectedRow = table.getSelectedRow();
-        if (selectedRow != -1) {
-            int userId = (int) tableModel.getValueAt(selectedRow, 0);
-            userDao.delete(userId);
-            tableModel.removeRow(selectedRow);
-            JOptionPane.showMessageDialog(this, "Utilisateur supprimé avec succès.", "Suppression réussie",
-                    JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(this, "Veuillez sélectionner un utilisateur à supprimer.", "Erreur",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private int getNbrCandidats() throws SQLException {
-        userDao = new UserDao();
-        return userDao.calculCandidats();
+    
+    int tele = Integer.parseInt(telephone);
+    if (!nom.isEmpty() && !prenom.isEmpty() && !adresse.isEmpty() && !telephone.isEmpty()) {
+        User newUser = new User(nom, prenom, adresse, tele);
+        userDao.save(newUser);
+        loadUserData();
+        clearFields();
         
+        // Récupérer le dernier ID inséré dans la base de données
+        int lastInsertedId = userDao.getLastInsertedId(); // À implémenter dans votre DAO
+        
+        // Ajouter la nouvelle ligne à la fin du tableau avec l'ID incrémenté
+        tableModel.addRow(new Object[]{lastInsertedId, nom, prenom, adresse, tele}); // Ajoutez la nouvelle ligne à la fin
+        
+        JOptionPane.showMessageDialog(this, "Utilisateur ajouté avec succès.", "Ajout réussi",
+                JOptionPane.INFORMATION_MESSAGE);
+    } else {
+        JOptionPane.showMessageDialog(this, "Veuillez remplir tous les champs.", "Erreur",
+                JOptionPane.ERROR_MESSAGE);
     }
+}
+
+
+
 
     private void loadUserData() throws SQLException {
         userDao = new UserDao();
@@ -262,17 +320,34 @@ public class GestionCandidatsPanel extends JPanel {
         }
     }
 
-    private void clearFieldsAndSelection() throws SQLException {
+    private void clearFields() {
         nomField.setText("");
         prenomField.setText("");
         adresseField.setText("");
         telephoneField.setText("");
-
-        table.clearSelection();
-        nbrLabel.setText("Nbr Candidats : " + getNbrCandidats() + "  ");
     }
 
     private void handleError(String message) {
         JOptionPane.showMessageDialog(this, message, "Erreur", JOptionPane.ERROR_MESSAGE);
+    }
+
+    public class RoundedBorder implements Border {
+        private int radius;
+
+        public RoundedBorder(int radius) {
+            this.radius = radius;
+        }
+
+        public Insets getBorderInsets(Component c) {
+            return new Insets(this.radius + 1, this.radius + 1, this.radius + 2, this.radius);
+        }
+
+        public boolean isBorderOpaque() {
+            return true;
+        }
+
+        public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+            g.drawRoundRect(x, y, width - 1, height - 1, radius, radius);
+        }
     }
 }

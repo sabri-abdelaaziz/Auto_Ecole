@@ -9,7 +9,7 @@ private String prenom;
 private String adresse;	
 private String telephone;
 
- public User() {}
+ public User(String nom1, String prenom1, String adresse1, int tele) {}
 public User( String nom, String prenom, String adresse, String telephone) {
         this.nom = nom;
         this.prenom = prenom;

@@ -14,7 +14,7 @@ public class NavBar extends JPanel {
 
     public NavBar() {
         setLayout(new BorderLayout());
-        setBackground(new Color(144, 238, 144)); // Light green background
+        setBackground(Color.BLACK); // Black background
 
         JPanel verticalMenu = createVerticalMenu();
         add(verticalMenu, BorderLayout.WEST);
@@ -28,48 +28,43 @@ public class NavBar extends JPanel {
     private JPanel createVerticalMenu() {
         JPanel menuPanel = new JPanel();
         menuPanel.setLayout(new GridLayout(10, 1));
-        menuPanel.setBackground(new Color(0, 100, 0)); // Dark green background
+        menuPanel.setBackground(Color.BLACK); // Black background
 
         String[] titles = {"Accueil", "Gestion Candidats", "Gestion Véhicules", "Gestion Moniteurs",
-                           "Gestion Séances", "Gestion Cours", "Gestion Examens", "Gestion Factures",
-                           "Gestion Réservations", "Statistiques"};
+                "Gestion Séances", "Gestion Cours", "Gestion Examens", "Gestion Factures",
+                "Gestion Réservations", "Statistiques"};
         for (String title : titles) {
             JButton button = new JButton(title);
             button.setFont(new Font("Times New Roman", Font.BOLD, 16));
-            button.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK));
-            button.setBackground(new Color(0, 100, 0));
-            button.setForeground(Color.WHITE);
+            button.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.WHITE)); // White bottom border
+            button.setBackground(Color.BLACK);
+            button.setForeground(Color.WHITE); // White text color
             button.setPreferredSize(new Dimension(200, 40));
-            
-          
-            
-    button.setOpaque(true); // Set the button to be opaque
 
-button.addMouseListener(new MouseAdapter() {
-    @Override
-    public void mousePressed(MouseEvent e) {
-        button.setBackground(new Color(10, 100, 10)); // Change background color when mouse is pressed
-    }
+            button.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    button.setBackground(new Color(10, 100, 10)); // Change background color when mouse is pressed
+                }
 
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        button.setBackground(new Color(0, 100, 0)); // Restore default background color when mouse is released
-    }
-});
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                    button.setBackground(Color.BLACK); // Restore default background color when mouse is released
+                }
+            });
 
-button.addActionListener(new ActionListener() {
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        button.setBackground(new Color(0, 100, 0)); // Restore default background color when clicked
+            button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    button.setBackground(Color.BLACK); // Restore default background color when clicked
 
-        // When a button is clicked, notify the listener
-        if (listener != null) {
-            listener.titleClicked(title);
-        }
-    }
-});
+                    // When a button is clicked, notify the listener
+                    if (listener != null) {
+                        listener.titleClicked(title);
+                    }
+                }
+            });
 
-            
             menuPanel.add(button);
         }
 

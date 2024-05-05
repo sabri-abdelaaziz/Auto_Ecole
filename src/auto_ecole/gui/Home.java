@@ -12,7 +12,7 @@ public class Home extends JFrame implements NavBarListener {
     private JPanel headerPanel;
 
     public Home() throws SQLException {
-        setTitle("Home");
+        setTitle("Gestion Auto-Ecole");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         
@@ -26,11 +26,12 @@ public class Home extends JFrame implements NavBarListener {
 
         headerPanel = new Header(); 
         add(headerPanel, BorderLayout.NORTH);
-
+        headerPanel.setSize(800, 60);
+        
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
-        FrameConstantes frameConstantes = new FrameConstantes(this, "Home");
+        FrameConstantes frameConstantes = new FrameConstantes(this, "Gestion Auto-Ecole");
         frameConstantes.setVisible();
     }
 
@@ -113,13 +114,5 @@ public class Home extends JFrame implements NavBarListener {
         repaint();
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            try {
-                new Home();
-            } catch (SQLException ex) {
-                Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
-    }
+    
 }

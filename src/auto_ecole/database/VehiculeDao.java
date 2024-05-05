@@ -47,7 +47,8 @@ public class VehiculeDao {
             statement.executeUpdate();
         }
     }
-
+    
+    
     public List<Vehicule> getAll() throws SQLException {
         List<Vehicule> vehicules = new ArrayList<>();
         String query = "SELECT * FROM vehicule";
@@ -81,7 +82,13 @@ public class VehiculeDao {
 
         return vehicleIds;
     }
-    
+    public void delete(int vehiculeId) throws SQLException {
+        String query = "DELETE FROM vehicule WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, vehiculeId);
+            statement.executeUpdate();
+        }
+    }
     // Vous pouvez implémenter d'autres méthodes pour la mise à jour et la suppression des véhicules si nécessaire
 
     public void close() throws SQLException {
@@ -138,4 +145,15 @@ public class VehiculeDao {
         }
         return nbr;
     }
+
+    public void update(Vehicule vehicule) throws SQLException {
+    String query = "UPDATE vehicules SET marque = ?, modele = ?, annee_fabrication = ? WHERE id = ?";
+    try (PreparedStatement statement = connection.prepareStatement(query)) {
+        statement.setString(1, vehicule.getMarque());
+        statement.setString(2, vehicule.getModele());
+        statement.setInt(3, vehicule.getAnneeFabrication());
+        statement.setInt(4, vehicule.getId());
+        statement.executeUpdate();
+    }
+}
 }

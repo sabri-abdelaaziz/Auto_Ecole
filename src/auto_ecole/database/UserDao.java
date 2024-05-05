@@ -83,13 +83,13 @@ public int calculCandidats() {
 
     // Method to save a new user
     public void save(User user) throws SQLException {
-    String query = "INSERT INTO Eleve (id, nom, prenom, adresse, telephone) VALUES (?, ?, ?, ?, ?)";
+    String query = "INSERT INTO Eleve (nom, prenom, adresse, telephone) VALUES ( ?, ?, ?, ?)";
     try (PreparedStatement statement = connection.prepareStatement(query)) {
-        statement.setInt(1, user.getId());
-        statement.setString(2, user.getNom());
-        statement.setString(3, user.getPrenom());
-        statement.setString(4, user.getAdresse());
-        statement.setString(5, user.getTelephone());
+        //statement.setInt(1, user.getId());
+        statement.setString(1, user.getNom());
+        statement.setString(2, user.getPrenom());
+        statement.setString(3, user.getAdresse());
+        statement.setString(4, user.getTelephone());
 
         statement.executeUpdate();
     }
@@ -130,5 +130,33 @@ public void delete(int userId) throws SQLException {
         }
         return nbr;
     }
+     
+    public int getLastInsertedId() throws SQLException {
+    int lastInsertedId = -1;
+    PreparedStatement statement = null;
+    ResultSet resultSet = null;
+
+    try {
+        String query = "SELECT LAST_INSERT_ID() AS last_id"; // MySQL
+        statement = connection.prepareStatement(query); // Use the existing connection instance
+        
+        resultSet = statement.executeQuery();
+
+        if (resultSet.next()) {
+            lastInsertedId = resultSet.getInt("last_id");
+        }
+    } finally {
+        // Close resources securely
+        if (resultSet != null) {
+            resultSet.close();
+        }
+        if (statement != null) {
+            statement.close();
+        }
+        // Do not close the connection here, as it should be managed externally
+    }
+
+    return lastInsertedId;
+}
 
 }
