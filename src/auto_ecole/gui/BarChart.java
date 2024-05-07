@@ -10,6 +10,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
 import java.util.Map;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 public class BarChart extends JPanel {
 
@@ -17,18 +20,19 @@ public class BarChart extends JPanel {
         // Create a dataset
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
+        setBorder(new CompoundBorder(new LineBorder(new Color(18, 34, 34)), new EmptyBorder(10, 10, 10, 10)));
         // Fetch data from database
         ChartDataDao chartDataDAO = new ChartDataDao();
         Map<String, Integer> data = chartDataDAO.getBarChartData();
 
         // Add data to the dataset
-        data.forEach((month, totalRevenues) -> dataset.addValue(totalRevenues, "Revenues", month));
+        data.forEach((month, totalRevenues) -> dataset.addValue(totalRevenues, "Revenue", month));
 
         // Create the chart
         JFreeChart chart = ChartFactory.createBarChart(
-                "Monthly Revenues",
-                "Month/Year",
-                "Total Revenues",
+                "Classification du voiture",
+                "Modèle",
+                "Total",
                 dataset
         );
 
@@ -37,7 +41,8 @@ public class BarChart extends JPanel {
 
         // Create a panel to display the chart
         ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new Dimension(600, 400));
+        
+            chartPanel.setPreferredSize(new Dimension(600, 320));
 
         // Add the chart panel to the JPanel
         add(chartPanel);

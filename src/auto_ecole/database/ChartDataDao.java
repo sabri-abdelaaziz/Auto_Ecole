@@ -18,15 +18,14 @@ public class ChartDataDao {
         Map<String, Integer> data = new HashMap<>();
 
         try  {
-            String query = "SELECT MONTH(date_paiement) AS mois, YEAR(date_paiement) AS annee, SUM(montant) AS total_revenus " +
-                           "FROM FacturePaiement " +
-                           "GROUP BY MONTH(date_paiement), YEAR(date_paiement) " +
-                           "ORDER BY annee ASC, mois ASC";
+            String query = "SELECT modele, COUNT(*) AS nombre_modele\n" +
+"FROM Vehicule\n" +
+"GROUP BY modele;";
             try (PreparedStatement statement = connection.prepareStatement(query);
                  ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    String mois = resultSet.getString("mois") + "/" + resultSet.getString("annee");
-                    int totalRevenus = resultSet.getInt("total_revenus");
+                    String mois = resultSet.getString("modele");
+                    int totalRevenus = resultSet.getInt("nombre_modele");
                     data.put(mois, totalRevenus);
                 }
             }
@@ -37,19 +36,18 @@ public class ChartDataDao {
         return data;
     }
 
-   public Map<String, Integer> getPieChartData() {
-        Map<String, Integer> data = new HashMap<>();
+   public Map<String, Double> getPieChartData() {
+        Map<String, Double> data = new HashMap<>();
 
         try  {
-            String query = "SELECT u.nom AS nom_etudiant, COUNT(r.id) AS nombre_reservations\n" +
-"FROM Eleve u\n" +
-"JOIN reservation r ON u.id = r.eleve_id\n" +
-"GROUP BY u.nom;";
+            String query = "SELECT mode_paiement, SUM(montant) AS total_montant\n" +
+"FROM FacturePaiement\n" +
+"GROUP BY mode_paiement;";
             try (PreparedStatement statement = connection.prepareStatement(query);
                  ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    String category = resultSet.getString("nom_etudiant");
-                    int value = resultSet.getInt("nombre_reservations");
+                    String category = resultSet.getString("mode_paiement");
+                    double value = resultSet.getDouble("total_montant");
                     data.put(category, value);
                 }
             }
@@ -59,27 +57,43 @@ public class ChartDataDao {
 
         return data;
     }
-    public Map<String, Float> getLineChartData() {
-    Map<String, Float> data = new HashMap<>();
+   public Map<String, Float> getLineChartData() {
+        Map<String, Float> data = new HashMap<>();
 
-    try  {
-        String query = "SELECT MONTH(date_paiement) AS mois, YEAR(date_paiement) AS annee, SUM(montant) AS total_revenus\n" +
-                       "FROM FacturePaiement\n" +
-                       "GROUP BY YEAR(date_paiement), MONTH(date_paiement)\n" +
-                       "ORDER BY YEAR(date_paiement) ASC, MONTH(date_paiement) ASC;";
-        try (PreparedStatement statement = connection.prepareStatement(query);
-             ResultSet resultSet = statement.executeQuery()) {
-            while (resultSet.next()) {
-                String mois = resultSet.getString("mois") + "/" + resultSet.getString("annee");
-                float totalRevenus = resultSet.getFloat("total_revenus");
-                data.put(mois, totalRevenus);
+        try {
+            String query = "SELECT MONTH(date_paiement) AS mois, YEAR(date_paiement) AS annee, SUM(montant) AS total_revenus\n" +
+                    "FROM FacturePaiement\n" +
+                    "GROUP BY YEAR(date_paiement), MONTH(date_paiement)\n" +
+                    "ORDER BY YEAR(date_paiement) ASC, MONTH(date_paiement) ASC;";
+            try (PreparedStatement statement = connection.prepareStatement(query);
+                 ResultSet resultSet = statement.executeQuery()) {
+                int moisPrecedent = 0;
+                int anneePrecedente = 0;
+                float sommeCumulative = 0;
+                while (resultSet.next()) {
+                    int mois = resultSet.getInt("mois");
+                    int annee = resultSet.getInt("annee");
+                    float totalRevenus = resultSet.getFloat("total_revenus");
+                    String date = mois + "/" + annee;
+                    if (moisPrecedent != 0 && anneePrecedente != 0) {
+                        // Calcul de la croissance exponentielle
+                        float croissance = (totalRevenus - sommeCumulative) / sommeCumulative;
+                        float prevData = data.get(moisPrecedent + "/" + anneePrecedente);
+                        float newData = prevData * (1 + croissance);
+                        data.put(date, newData);
+                    } else {
+                        data.put(date, totalRevenus);
+                    }
+                    moisPrecedent = mois;
+                    anneePrecedente = annee;
+                    sommeCumulative = totalRevenus;
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
 
-    return data;
-}
+        return data;
+    }
 
 }

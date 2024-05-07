@@ -11,6 +11,9 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 public class PieChart extends JPanel {
 
@@ -21,14 +24,14 @@ public class PieChart extends JPanel {
             
             // Fetch data from database
             ChartDataDao chartDataDAO = new ChartDataDao();
-            Map<String, Integer> data = chartDataDAO.getPieChartData();
+            Map<String, Double> data = chartDataDAO.getPieChartData();
             
             // Add data to the dataset
             data.forEach(dataset::setValue);
             
             // Create the chart
             JFreeChart chart = ChartFactory.createPieChart(
-                    "Les Candidats avec leur dépences",
+                    "Revenues par Mode de paiement",
                     dataset,
                     true, // include legend
                     true, // include tooltips
@@ -40,8 +43,9 @@ public class PieChart extends JPanel {
             
             // Create a panel to display the chart
             ChartPanel chartPanel = new ChartPanel(chart);
-            chartPanel.setPreferredSize(new Dimension(600, 400));
+            chartPanel.setPreferredSize(new Dimension(600, 320));
             
+        setBorder(new CompoundBorder(new LineBorder(new Color(18, 34, 34)), new EmptyBorder(10, 10, 10, 10)));
             // Add the chart panel to this JPanel
             add(chartPanel);
         } catch (SQLException ex) {
@@ -51,7 +55,7 @@ public class PieChart extends JPanel {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Pie Chart Example");
+            JFrame frame = new JFrame("");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.getContentPane().add(new PieChart());
             frame.pack();
