@@ -20,7 +20,7 @@ public class Header extends JPanel {
         // Load your logo image
         ImageIcon logoIcon = null;
         try {
-            ImageIcon originalIcon = new ImageIcon(getClass().getResource("/logo.png"));
+            ImageIcon originalIcon = new ImageIcon(getClass().getResource("./src/logo_1.png"));
             Image originalImage = originalIcon.getImage();
 
             

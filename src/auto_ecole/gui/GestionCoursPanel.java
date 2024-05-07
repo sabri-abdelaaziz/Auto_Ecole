@@ -1,4 +1,3 @@
-
 package auto_ecole.gui;
 
 import auto_ecole.database.CoursDao;
@@ -35,21 +34,19 @@ public class GestionCoursPanel extends JPanel {
     private JTextField heureFinField;
     private JComboBox<String> vehiculeIdComboBox;
     private List<Integer> vehiculeIds;
-    
 
     public GestionCoursPanel() {
         setBackground(Color.WHITE);
         setLayout(new BorderLayout());
-        
-        
+
         try {
             coursDao = new CoursDao();
-           
+
         } catch (SQLException e) {
             handleError("Erreur lors du chargement des données : " + e.getMessage());
             e.printStackTrace();
         }
-        
+
         // Top panel
         JPanel northPanel = new JPanel(new BorderLayout());
         northPanel.setBackground(Color.WHITE);
@@ -65,7 +62,7 @@ public class GestionCoursPanel extends JPanel {
         titlePanel.setBackground(Color.WHITE);
 
         // Loading and resizing the icon
-        ImageIcon icon = new ImageIcon("C:\\Users\\HP\\Desktop\\Projet_J2EE\\Auto_Ecole\\src\\cours.png");
+        ImageIcon icon = new ImageIcon("./src/cours.png");
         Image image = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         ImageIcon resizedIcon = new ImageIcon(image);
         JLabel iconLabel = new JLabel(resizedIcon);
@@ -104,7 +101,6 @@ public class GestionCoursPanel extends JPanel {
         gbc.anchor = GridBagConstraints.WEST; // Alignement à gauche
         // Add Course Form Components
 
-              
         gbc.gridy++;
         formPanel.add(new JLabel("Titre:"), gbc);
         gbc.gridy++;
@@ -151,9 +147,6 @@ public class GestionCoursPanel extends JPanel {
         vehiculeIdComboBox.setBackground(Color.WHITE);
         formPanel.add(vehiculeIdComboBox, gbc);
 
-        
-        
-        
         // RoundedBorder
         formPanel.setBorder(new GestionCoursPanel.RoundedBorder(20));
 
@@ -189,7 +182,7 @@ public class GestionCoursPanel extends JPanel {
         gbc.gridx++;
         gbc.insets = new Insets(5, 10, 5, 10); // Ajout d'un espace horizontal entre les boutons
         formPanel.add(addButton, gbc);
-        
+
         // Add horizontal space between buttons
         gbc.gridx++;
         gbc.insets = new Insets(5, 10, 5, 10); // Ajout d'un espace horizontal entre les boutons
@@ -197,7 +190,7 @@ public class GestionCoursPanel extends JPanel {
 
         leftPanel.add(formPanel, BorderLayout.NORTH);
 
-         // Right Panel: User Table with Modify and Delete Buttons
+        // Right Panel: User Table with Modify and Delete Buttons
         JPanel rightPanel = new JPanel(new BorderLayout());
         rightPanel.setBorder(new CompoundBorder(new LineBorder(Color.BLACK), new EmptyBorder(20, 20, 20, 20)));
         rightPanel.setBackground(Color.WHITE);
@@ -444,7 +437,7 @@ public class GestionCoursPanel extends JPanel {
         dateDebutField.setDate(null);
         dateFinField.setDate(null);
         heureDebutField.setText("");
-        heureFinField.setText("");  
+        heureFinField.setText("");
         table.clearSelection();
         //nbrLabel.setText("Nbr Cours : " + getNbrCours() + "  ");
     }
@@ -466,7 +459,7 @@ public class GestionCoursPanel extends JPanel {
                         heureFinField.setText(selectedCourse.getHeureFin());
 
                         // Find the index of the selected course's vehicle ID in the list of vehicle IDs
-                        int selectedId  =(int) tableModel.getValueAt(selectedRow, columnIndex);
+                        int selectedId = (int) tableModel.getValueAt(selectedRow, columnIndex);
 
                         // Find the index of the selected ID in the JComboBox
                         int selectedIndex = -1;
@@ -478,7 +471,7 @@ public class GestionCoursPanel extends JPanel {
                             }
                         }
 
-// Set the selected index of the JComboBox
+                        // Set the selected index of the JComboBox
                         if (selectedIndex != -1) {
                             vehiculeIdComboBox.setSelectedIndex(selectedIndex);
                         }
@@ -495,8 +488,9 @@ public class GestionCoursPanel extends JPanel {
     private void handleError(String message) {
         JOptionPane.showMessageDialog(this, message, "Erreur", JOptionPane.ERROR_MESSAGE);
     }
-    
+
     public class RoundedBorder implements Border {
+
         private int radius;
 
         public RoundedBorder(int radius) {

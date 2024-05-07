@@ -1,6 +1,5 @@
 package auto_ecole.gui;
 
-import auto_ecole.database.MoniteursDao;
 import auto_ecole.database.UserDao;
 import auto_ecole.model.User;
 
@@ -13,8 +12,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 
 public class GestionCandidatsPanel extends JPanel {
@@ -54,7 +51,7 @@ public class GestionCandidatsPanel extends JPanel {
         titlePanel.setBackground(Color.WHITE);
 
         // Loading and resizing the icon
-        ImageIcon icon = new ImageIcon("C:\\Users\\HP\\Desktop\\Projet_J2EE\\Auto_Ecole\\src\\candidat.png");
+        ImageIcon icon = new ImageIcon("./src/candidat.png");
         Image image = icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
         ImageIcon resizedIcon = new ImageIcon(image);
         JLabel iconLabel = new JLabel(resizedIcon);
