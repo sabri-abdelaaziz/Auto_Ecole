@@ -25,6 +25,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 public class GestionReservationsPanel extends JPanel {
@@ -49,37 +54,108 @@ public class GestionReservationsPanel extends JPanel {
         
         setBackground(Color.WHITE);
         setLayout(new BorderLayout());
-
-        // Panel Nord
+        
+        // Top panel
         JPanel northPanel = new JPanel(new BorderLayout());
-        JLabel label = new JLabel("Gestion des Réservations");
-        label.setFont(new Font("Arial", Font.BOLD, 20));
-        label.setHorizontalAlignment(SwingConstants.CENTER);
-        northPanel.add(label, BorderLayout.CENTER);
+        northPanel.setBackground(Color.WHITE);
+        northPanel.setPreferredSize(new Dimension(northPanel.getPreferredSize().width, 100));
+        northPanel.setBorder(new CompoundBorder(new LineBorder(Color.BLACK), new EmptyBorder(10, 10, 10, 10)));
 
-        // Panel Gauche: Formulaire d'ajout de réservation
+        // Title Label with icon
+        JLabel label = new JLabel("Gestion Résérvations");
+        label.setFont(new Font("Times New Roman", Font.BOLD, 24));
+        label.setForeground(Color.pink);
+        //new Color(0, 191, 255)
+        JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        titlePanel.setBackground(Color.WHITE);
+
+        // Loading and resizing the icon
+
+
+        ImageIcon icon = new ImageIcon("C:\\Users\\HP\\Desktop\\Projet_J2EE\\Auto_Ecole\\src\\reservation.png");
+
+        Image image = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+        ImageIcon resizedIcon = new ImageIcon(image);
+        JLabel iconLabel = new JLabel(resizedIcon);
+
+        // Adding icon and title label to the title panel
+        titlePanel.add(iconLabel);
+        titlePanel.add(label);
+        northPanel.add(titlePanel, BorderLayout.CENTER);
+
+        // Main panel
+        JPanel mainPanel = new JPanel(new GridBagLayout());
+        mainPanel.setBackground(Color.WHITE);
+
+        // Left Panel: Add User Form
         JPanel leftPanel = new JPanel(new BorderLayout());
-        leftPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        leftPanel.setBorder(new CompoundBorder(new LineBorder(Color.BLACK), new EmptyBorder(20, 20, 20, 20)));
+        leftPanel.setBackground(Color.WHITE);
 
-        // Composants du formulaire
-        JPanel formPanel = new JPanel(new GridLayout(5, 2, 5, 5));
-        formPanel.add(new JLabel("Date:"));
+        // Add User Form Components
+        JPanel formPanel = new JPanel();
+        formPanel.setLayout(new GridBagLayout());
+        formPanel.setBackground(Color.white);
+        formPanel.setBorder(new CompoundBorder(new LineBorder(new Color(178, 34, 34)), new EmptyBorder(10, 10, 10, 10)));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(5, 10, 5, 10);
+
+        JLabel addUserLabel = new JLabel("Ajouter un cours :");
+        addUserLabel.setFont(new Font("Times New Roman", Font.BOLD, 20));
+        addUserLabel.setForeground(Color.red);
+        formPanel.add(addUserLabel, gbc);
+
+        gbc.gridy++;
+        gbc.anchor = GridBagConstraints.WEST; // Alignement à gauche
+        // Add Course Form Components
+
+        gbc.gridy++;
+        formPanel.add(new JLabel("Date:"), gbc);
+        gbc.gridy++;
         dateChooser = new JDateChooser();
-        formPanel.add(dateChooser);
+        JLabel labelForWidth = new JLabel();
+        dateChooser.setPreferredSize(new Dimension(13 * labelForWidth.getFontMetrics(labelForWidth.getFont()).charWidth('W'), dateChooser.getPreferredSize().height));
+        dateChooser.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+        formPanel.add(dateChooser, gbc);
 
-        formPanel.add(new JLabel("Heure:"));
-        heureField = new HeureField(); // Initialisation de HeureField
-        formPanel.add(heureField);
 
-        formPanel.add(new JLabel("Candidat:"));
+        gbc.gridy++;
+        formPanel.add(new JLabel("Heure Début:"), gbc);
+        gbc.gridy++;
+        heureField = new GestionReservationsPanel.HeureField(); // Initialisation de HeureField
+        heureField.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+        formPanel.add(heureField, gbc);
+
+        gbc.gridy++;
+        formPanel.add(new JLabel("Candidats ID:"), gbc);
+        gbc.gridy++;
         candidatComboBox = new JComboBox<>();
-        formPanel.add(candidatComboBox);
-
-        formPanel.add(new JLabel("Cours:"));
+        candidatComboBox.setPreferredSize(new Dimension(13 * heureField.getFontMetrics(heureField.getFont()).charWidth('W'), candidatComboBox.getPreferredSize().height));
+        candidatComboBox.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+        candidatComboBox.setBackground(Color.WHITE);
+        formPanel.add(candidatComboBox, gbc);
+        
+        gbc.gridy++;
+        formPanel.add(new JLabel("Cours ID:"), gbc);
+        gbc.gridy++;
         coursComboBox = new JComboBox<>();
-        formPanel.add(coursComboBox);
+        coursComboBox.setPreferredSize(new Dimension(13 * heureField.getFontMetrics(heureField.getFont()).charWidth('W'), coursComboBox.getPreferredSize().height));
+        coursComboBox.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+        coursComboBox.setBackground(Color.WHITE);
+        formPanel.add(coursComboBox, gbc);
 
+      // RoundedBorder
+        formPanel.setBorder(new GestionReservationsPanel.RoundedBorder(20));
+
+        // Create "Ajouter" button
         JButton addButton = new JButton("Ajouter");
+        addButton.setFont(new Font("Times New Roman", Font.BOLD, 14));
+        addButton.setForeground(Color.WHITE);
+        addButton.setBackground(Color.red); // Rouge clair
+        addButton.setBorder(new GestionReservationsPanel.RoundedBorder(10)); // Bordure arrondie
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -87,22 +163,39 @@ public class GestionReservationsPanel extends JPanel {
                 clearFields();
             }
         });
-        formPanel.add(addButton);
-        JButton clearButton = new JButton("Supprimer");
+
+        // Create "Effacer" button
+        JButton clearButton = new JButton("Effacer");
+        clearButton.setFont(new Font("Times New Roman", Font.BOLD, 14));
+        clearButton.setForeground(Color.WHITE);
+        clearButton.setBackground(Color.red); // Rouge clair
+        clearButton.setBorder(new GestionReservationsPanel.RoundedBorder(10)); // Bordure arrondie
         clearButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                deleteSelectedReservation(); // Appel de la méthode pour supprimer l'examen sélectionné dans le tableau
                 clearFields();
             }
-            
         });
-        formPanel.add(clearButton);
+
+        // Add buttons to form panel with GridBagLayout
+        gbc.gridy++;
+        gbc.gridx++;
+        gbc.insets = new Insets(5, 10, 5, 10); // Ajout d'un espace horizontal entre les boutons
+        formPanel.add(addButton, gbc);
+
+        // Add horizontal space between buttons
+        gbc.gridx++;
+        gbc.insets = new Insets(5, 10, 5, 10); // Ajout d'un espace horizontal entre les boutons
+        formPanel.add(clearButton, gbc);
+
         leftPanel.add(formPanel, BorderLayout.NORTH);
 
-        // Panel Droite: Tableau des réservations avec bouton Supprimer
+
+        // Right Panel: User Table with Modify and Delete Buttons
+
         JPanel rightPanel = new JPanel(new BorderLayout());
-        rightPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        rightPanel.setBorder(new CompoundBorder(new LineBorder(Color.BLACK), new EmptyBorder(20, 20, 20, 20)));
+        rightPanel.setBackground(Color.WHITE);
 
         // Tableau des réservations
         tableModel = new DefaultTableModel();
@@ -113,13 +206,86 @@ public class GestionReservationsPanel extends JPanel {
         tableModel.addColumn("Heure");
         table = new JTable(tableModel);
 
+        table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    boolean isSelected = table.getSelectedRow() != -1;
+                    addButton.setEnabled(!isSelected);
+                }
+                populateFieldsFromSelectedReservation();
+            }
+        });
+        table.getTableHeader().setFont(new Font("Times New Roman", Font.BOLD, 14)); // Police Times New Roman en gras
+        table.getTableHeader().setBackground(Color.green); // Fond de l'entête en gris
+        table.setBackground(Color.WHITE); // Fond du tableau en blanc
+        table.setFillsViewportHeight(true); // Remplir la hauteur de la vue
+
+        // Add table to scroll pane with rounded border
         JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(new Dimension(leftPanel.getPreferredSize().width, leftPanel.getPreferredSize().height)); // Même hauteur que leftPanel
+        scrollPane.setBorder(new GestionReservationsPanel.RoundedBorder(20)); // Appliquer le RoundedBorder au JScrollPane
+        scrollPane.setBackground(Color.white);
         rightPanel.add(scrollPane, BorderLayout.CENTER);
 
-        // Ajouter les panels au panel principal
+        // Create "Supprimer" button
+        JButton deleteButton = new JButton("Supprimer");
+        deleteButton.setFont(new Font("Times New Roman", Font.BOLD, 14));
+        deleteButton.setForeground(Color.WHITE);
+        deleteButton.setBackground(Color.green); // Rouge clair
+        deleteButton.setBorder(new GestionReservationsPanel.RoundedBorder(10)); // Bordure arrondie
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                deleteSelectedReservation();
+                clearFields();
+            }
+        });
+
+        // Create "Modifier" button
+        JButton modifyButton = new JButton("Modifier");
+        modifyButton.setFont(new Font("Times New Roman", Font.BOLD, 14));
+        modifyButton.setForeground(Color.WHITE);
+        modifyButton.setBackground(Color.green); // Rouge clair
+        modifyButton.setBorder(new GestionReservationsPanel.RoundedBorder(10)); // Bordure arrondie
+        modifyButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                modifyReservation();
+                clearFields();
+            }
+        });
+
+        // Ajouter les boutons "Supprimer" et "Modifier" au rightPanel
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.setBackground(Color.WHITE);
+        buttonPanel.add(deleteButton);
+        buttonPanel.add(modifyButton);
+        rightPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        // Add panels to main panel
+        GridBagConstraints leftPanelConstraints = new GridBagConstraints();
+        leftPanelConstraints.gridx = 0;
+        leftPanelConstraints.gridy = 0;
+        leftPanelConstraints.weightx = 0.5;
+        leftPanelConstraints.fill = GridBagConstraints.BOTH;
+        leftPanelConstraints.insets = new Insets(10, 10, 10, 5);
+
+        mainPanel.add(leftPanel, leftPanelConstraints);
+
+        GridBagConstraints rightPanelConstraints = new GridBagConstraints();
+        rightPanelConstraints.gridx = 1;
+        rightPanelConstraints.gridy = 0;
+        rightPanelConstraints.weightx = 0.5;
+        rightPanelConstraints.fill = GridBagConstraints.BOTH;
+        rightPanelConstraints.insets = new Insets(10, 10, 10, 5);
+
+        mainPanel.add(rightPanel, rightPanelConstraints);
+
         add(northPanel, BorderLayout.NORTH);
-        add(leftPanel, BorderLayout.WEST);
-        add(rightPanel, BorderLayout.CENTER);
+        add(mainPanel, BorderLayout.CENTER);
+
+       
 
         // Charger les données des candidats
         loadCandidatsData();
@@ -238,16 +404,42 @@ private void deleteSelectedReservation() {
         JOptionPane.showMessageDialog(this, message, "Erreur", JOptionPane.ERROR_MESSAGE);
     }
 
+    public class RoundedBorder implements Border {
+        private int radius;
+
+        public RoundedBorder(int radius) {
+            this.radius = radius;
+        }
+
+        public Insets getBorderInsets(Component c) {
+            return new Insets(this.radius + 1, this.radius + 1, this.radius + 2, this.radius);
+        }
+
+        public boolean isBorderOpaque() {
+            return true;
+        }
+
+        public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+            g.drawRoundRect(x, y, width - 1, height - 1, radius, radius);
+        }
+    }
+    
     public class HeureField extends JPanel {
+
         private JComboBox<String> hourComboBox;
         private JComboBox<String> minuteComboBox;
 
-        public HeureField() {
+        public HeureField(){
             setLayout(new FlowLayout());
-
+            setBackground(Color.WHITE);
+            
             hourComboBox = new JComboBox<>();
             minuteComboBox = new JComboBox<>();
-
+            hourComboBox.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+            hourComboBox.setBackground(Color.WHITE);
+            minuteComboBox.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+            minuteComboBox.setBackground(Color.WHITE);
+            
             // Ajouter les heures de 00 à 23 dans le JComboBox d'heures
             for (int i = 0; i < 24; i++) {
                 hourComboBox.addItem(String.format("%02d", i)); // Formatage pour avoir 2 chiffres
@@ -278,11 +470,14 @@ private void deleteSelectedReservation() {
             add(minuteComboBox);
         }
 
+       
+
+
         // Méthode pour mettre à jour le champ de texte avec l'heure sélectionnée
         private void updateTime() {
             String hour = (String) hourComboBox.getSelectedItem();
             String minute = (String) minuteComboBox.getSelectedItem();
-            setText(hour + ":" + minute); // Met à jour le champ de texte avec l'heure sélectionnée
+//            setText(hour + ":" + minute); // Met à jour le champ de texte avec l'heure sélectionnée
         }
 
         // Méthode pour définir l'heure dans les combobox
@@ -291,8 +486,8 @@ private void deleteSelectedReservation() {
             if (parts.length == 2) {
                 String hour = parts[0];
                 String minute = parts[1];
-                hourComboBox.setSelectedItem(hour);
-                minuteComboBox.setSelectedItem(minute);
+                hourComboBox.setSelectedItem((String) hour);
+                minuteComboBox.setSelectedItem((String) minute);
             }
         }
 
@@ -305,8 +500,77 @@ private void deleteSelectedReservation() {
 
         // Méthode pour réinitialiser l'heure à "00:00"
         public void resetTime() {
-            hourComboBox.setSelectedIndex(-1);
-            minuteComboBox.setSelectedIndex(-1);
+            hourComboBox.setSelectedIndex(-1); // Désélectionne toute sélection d'heure
+            minuteComboBox.setSelectedIndex(-1); // Désélectionne toute sélection de minute
+
         }
     }
+    
+   private void modifyReservation() {
+    int selectedRow = table.getSelectedRow();
+    if (selectedRow != -1) { // Vérifie si une ligne est sélectionnée
+        int reservationId = (int) table.getValueAt(selectedRow, 0);
+        try {
+            // Récupérer les nouvelles valeurs des champs
+            Date newDate = dateChooser.getDate();
+            String newHeure = heureField.getText();
+            String candidatInfo = (String) candidatComboBox.getSelectedItem();
+            int newCandidatId = Integer.parseInt(candidatInfo.split(",")[0].trim());
+            String coursInfo = (String) coursComboBox.getSelectedItem();
+            int newCoursId = Integer.parseInt(coursInfo.split(",")[0].trim());
+
+            // Créer un objet Reservation avec les nouvelles valeurs
+            Reservation updatedReservation = new Reservation(reservationId, newCandidatId, newCoursId, newDate, newHeure);
+
+            // Mettre à jour la réservation dans la base de données
+            reservationDao.update(updatedReservation);
+
+            // Recharger les données du tableau
+            loadReservationData();
+
+            // Afficher un message de succès
+            JOptionPane.showMessageDialog(this, "Réservation modifiée avec succès.", "Modification réussie", JOptionPane.INFORMATION_MESSAGE);
+        } catch (NumberFormatException | SQLException ex) {
+            handleError("Erreur lors de la modification de la réservation : " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    } else {
+        JOptionPane.showMessageDialog(this, "Veuillez sélectionner une réservation à modifier.", "Aucune sélection", JOptionPane.WARNING_MESSAGE);
+    }
+}
+
+
+
+    
+    // Méthode pour remplir les champs avec les données de la réservation sélectionnée
+private void populateFieldsFromSelectedReservation() {
+    int selectedRow = table.getSelectedRow();
+    if (selectedRow != -1) { // Vérifie si une ligne est sélectionnée
+        int reservationId = (int) table.getValueAt(selectedRow, 0); // Récupère l'ID de la réservation dans la première colonne
+        try {
+            // Récupérer les détails de la réservation à partir de son ID
+            Reservation selectedReservation = reservationDao.getReservationById(reservationId);
+            // Remplir les champs avec les données de la réservation sélectionnée
+            dateChooser.setDate(selectedReservation.getDateReservation());
+            heureField.setText(selectedReservation.getHeureReservation());
+
+            // Sélectionner le candidat correspondant dans le JComboBox
+            User candidat = userDao.getUserById(selectedReservation.getEleveId());
+            candidatComboBox.setSelectedItem(selectedReservation.getEleveId() + ", " + candidat.getNom() + " " + candidat.getPrenom());
+
+            // Sélectionner le cours correspondant dans le JComboBox
+            Cours cours = coursDao.getCoursById(selectedReservation.getCoursId());
+            coursComboBox.setSelectedItem(selectedReservation.getCoursId() + ", " + cours.getTitre());
+
+        } catch (SQLException ex) {
+            handleError("Erreur lors de la récupération des données de la réservation sélectionnée : " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+}
+
+
+
+
+
 }

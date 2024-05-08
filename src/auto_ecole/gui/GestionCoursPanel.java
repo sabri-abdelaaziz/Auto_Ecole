@@ -13,6 +13,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.sql.SQLException;
 import java.util.List;
 import javax.swing.border.Border;
@@ -30,22 +32,27 @@ public class GestionCoursPanel extends JPanel {
     private JTextField titreField;
     private JDateChooser dateDebutField;
     private JDateChooser dateFinField;
-    private JTextField heureDebutField;
-    private JTextField heureFinField;
+    private HeureField heureDebutField;
+    private HeureField heureFinField;
     private JComboBox<String> vehiculeIdComboBox;
     private List<Integer> vehiculeIds;
+    
 
     public GestionCoursPanel() {
         setBackground(Color.WHITE);
         setLayout(new BorderLayout());
-
+  
+        
         try {
             coursDao = new CoursDao();
+           
 
         } catch (SQLException e) {
             handleError("Erreur lors du chargement des données : " + e.getMessage());
             e.printStackTrace();
         }
+
+        
 
         // Top panel
         JPanel northPanel = new JPanel(new BorderLayout());
@@ -62,7 +69,10 @@ public class GestionCoursPanel extends JPanel {
         titlePanel.setBackground(Color.WHITE);
 
         // Loading and resizing the icon
-        ImageIcon icon = new ImageIcon("./src/cours.png");
+
+
+        ImageIcon icon = new ImageIcon("C:\\Users\\HP\\Desktop\\Projet_J2EE\\Auto_Ecole\\src\\cours.png");
+
         Image image = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         ImageIcon resizedIcon = new ImageIcon(image);
         JLabel iconLabel = new JLabel(resizedIcon);
@@ -127,14 +137,14 @@ public class GestionCoursPanel extends JPanel {
         gbc.gridy++;
         formPanel.add(new JLabel("Heure Début:"), gbc);
         gbc.gridy++;
-        heureDebutField = new JTextField(15);
+        heureDebutField = new GestionCoursPanel.HeureField(); // Initialisation de HeureField
         heureDebutField.setFont(new Font("Times New Roman", Font.PLAIN, 14));
         formPanel.add(heureDebutField, gbc);
 
         gbc.gridy++;
         formPanel.add(new JLabel("Heure Fin:"), gbc);
         gbc.gridy++;
-        heureFinField = new JTextField(15);
+        heureFinField = new GestionCoursPanel.HeureField(); // Initialisation de HeureField
         heureFinField.setFont(new Font("Times New Roman", Font.PLAIN, 14));
         formPanel.add(heureFinField, gbc);
 
@@ -146,6 +156,7 @@ public class GestionCoursPanel extends JPanel {
         vehiculeIdComboBox.setFont(new Font("Times New Roman", Font.PLAIN, 14));
         vehiculeIdComboBox.setBackground(Color.WHITE);
         formPanel.add(vehiculeIdComboBox, gbc);
+
 
         // RoundedBorder
         formPanel.setBorder(new GestionCoursPanel.RoundedBorder(20));
@@ -190,7 +201,9 @@ public class GestionCoursPanel extends JPanel {
 
         leftPanel.add(formPanel, BorderLayout.NORTH);
 
+
         // Right Panel: User Table with Modify and Delete Buttons
+
         JPanel rightPanel = new JPanel(new BorderLayout());
         rightPanel.setBorder(new CompoundBorder(new LineBorder(Color.BLACK), new EmptyBorder(20, 20, 20, 20)));
         rightPanel.setBackground(Color.WHITE);
@@ -485,12 +498,13 @@ public class GestionCoursPanel extends JPanel {
         }
     }
 
+    
     private void handleError(String message) {
         JOptionPane.showMessageDialog(this, message, "Erreur", JOptionPane.ERROR_MESSAGE);
     }
 
+    
     public class RoundedBorder implements Border {
-
         private int radius;
 
         public RoundedBorder(int radius) {
@@ -507,6 +521,88 @@ public class GestionCoursPanel extends JPanel {
 
         public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
             g.drawRoundRect(x, y, width - 1, height - 1, radius, radius);
+        }
+    }
+    
+        public static class HeureField extends JPanel {
+
+        private JComboBox<String> hourComboBox;
+        private JComboBox<String> minuteComboBox;
+
+        public HeureField(){
+            setLayout(new FlowLayout());
+            setBackground(Color.WHITE);
+            
+            hourComboBox = new JComboBox<>();
+            minuteComboBox = new JComboBox<>();
+            hourComboBox.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+            hourComboBox.setBackground(Color.WHITE);
+            minuteComboBox.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+            minuteComboBox.setBackground(Color.WHITE);
+            
+            // Ajouter les heures de 00 à 23 dans le JComboBox d'heures
+            for (int i = 0; i < 24; i++) {
+                hourComboBox.addItem(String.format("%02d", i)); // Formatage pour avoir 2 chiffres
+            }
+
+            // Ajouter les minutes de 00 à 59 dans le JComboBox de minutes
+            for (int i = 0; i < 60; i++) {
+                minuteComboBox.addItem(String.format("%02d", i)); // Formatage pour avoir 2 chiffres
+            }
+
+            // Ajouter des écouteurs pour détecter les changements dans les combobox
+            hourComboBox.addItemListener(new ItemListener() {
+                @Override
+                public void itemStateChanged(ItemEvent e) {
+                    updateTime();
+                }
+            });
+
+            minuteComboBox.addItemListener(new ItemListener() {
+                @Override
+                public void itemStateChanged(ItemEvent e) {
+                    updateTime();
+                }
+            });
+
+            add(hourComboBox);
+            add(new JLabel(":"));
+            add(minuteComboBox);
+        }
+
+       
+
+
+        // Méthode pour mettre à jour le champ de texte avec l'heure sélectionnée
+        private void updateTime() {
+            String hour = (String) hourComboBox.getSelectedItem();
+            String minute = (String) minuteComboBox.getSelectedItem();
+//            setText(hour + ":" + minute); // Met à jour le champ de texte avec l'heure sélectionnée
+        }
+
+        // Méthode pour définir l'heure dans les combobox
+        public void setText(String time) {
+            String[] parts = time.split(":");
+            if (parts.length == 2) {
+                String hour = parts[0];
+                String minute = parts[1];
+                hourComboBox.setSelectedItem((String) hour);
+                minuteComboBox.setSelectedItem((String) minute);
+            }
+        }
+
+        // Méthode pour obtenir l'heure sélectionnée
+        public String getText() {
+            String hour = (String) hourComboBox.getSelectedItem();
+            String minute = (String) minuteComboBox.getSelectedItem();
+            return hour + ":" + minute;
+        }
+
+        // Méthode pour réinitialiser l'heure à "00:00"
+        public void resetTime() {
+            hourComboBox.setSelectedIndex(-1); // Désélectionne toute sélection d'heure
+            minuteComboBox.setSelectedIndex(-1); // Désélectionne toute sélection de minute
+
         }
     }
 }

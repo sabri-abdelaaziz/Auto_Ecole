@@ -145,6 +145,25 @@ public void delete(int userId) throws SQLException {
         return nbr;
     }
      
+     // Méthode pour récupérer un utilisateur par son ID
+    public User getUserById(int userId) throws SQLException {
+        String query = "SELECT * FROM eleve WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, userId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    String nom = resultSet.getString("nom");
+                    String prenom = resultSet.getString("prenom");
+                    String adresse = resultSet.getString("adresse");
+                    String telephone = resultSet.getString("telephone");
+                    return new User(id, nom, prenom, adresse, telephone); // Retourner un objet User avec les détails récupérés
+                }
+            }
+        }
+        return null; // Retourner null si aucun utilisateur n'est trouvé avec cet ID
+    }
+    
     public int getLastInsertedId() throws SQLException {
     int lastInsertedId = -1;
     PreparedStatement statement = null;

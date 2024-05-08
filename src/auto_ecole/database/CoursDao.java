@@ -13,7 +13,7 @@ public class CoursDao {
     }
 
     public Cours find(int id) throws SQLException {
-        String query = "SELECT * FROM Cours WHERE id = ?";
+        String query = "SELECT * FROM cours WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, id);
             try (ResultSet res = statement.executeQuery()) {
@@ -103,5 +103,26 @@ public class CoursDao {
             ex.printStackTrace();
         }
         return nbr;
+    }
+    
+    // Méthode pour récupérer un cours par son ID
+    public Cours getCoursById(int coursId) throws SQLException {
+        String query = "SELECT * FROM cours WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, coursId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    String titre = resultSet.getString("titre");
+                    Date dateDebut = resultSet.getDate("date_debut");
+                    Date dateFin = resultSet.getDate("date_fin");
+                    String heureDebut = resultSet.getString("heure_debut");
+                    String heureFin = resultSet.getString("heure_fin");
+                    int vehiculeId = resultSet.getInt("vehicule_id");
+                    return new Cours(id, titre, dateDebut, dateFin, heureDebut, heureFin, vehiculeId); // Retourner un objet Cours avec les détails récupérés
+                }
+            }
+        }
+        return null; // Retourner null si aucun cours n'est trouvé avec cet ID
     }
 }

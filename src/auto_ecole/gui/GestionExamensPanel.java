@@ -85,7 +85,7 @@ public class GestionExamensPanel extends JPanel {
         titlePanel.setBackground(Color.WHITE);
 
         // Loading and resizing the icon
-        ImageIcon icon = new ImageIcon("./src/candidat.png");
+        ImageIcon icon = new ImageIcon("./src/exam.png");
         Image image = icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
         ImageIcon resizedIcon = new ImageIcon(image);
         JLabel iconLabel = new JLabel(resizedIcon);
@@ -111,7 +111,7 @@ public class GestionExamensPanel extends JPanel {
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(5, 10, 5, 10);
 
-        JLabel addUserLabel = new JLabel("Ajouter un candidat :");
+        JLabel addUserLabel = new JLabel("Ajouter un examen :");
         addUserLabel.setFont(new Font("Times New Roman", Font.BOLD, 20));
         addUserLabel.setForeground(new Color(178, 34, 34));
         formPanel.add(addUserLabel, gbc);
@@ -160,7 +160,7 @@ public class GestionExamensPanel extends JPanel {
         JButton addButton = new JButton("Ajouter");
         addButton.setFont(new Font("Times New Roman", Font.BOLD, 14));
         addButton.setForeground(Color.WHITE);
-        addButton.setBackground(new Color(0, 191, 255)); // Rouge clair
+        addButton.setBackground(new Color(178, 34, 34)); // Rouge clair
         addButton.setBorder(new GestionExamensPanel.RoundedBorder(10)); // Bordure arrondie
         addButton.addActionListener(new ActionListener() {
             @Override
@@ -173,7 +173,7 @@ public class GestionExamensPanel extends JPanel {
         JButton clearButton = new JButton("Effacer");
         clearButton.setFont(new Font("Times New Roman", Font.BOLD, 14));
         clearButton.setForeground(Color.WHITE);
-        clearButton.setBackground(new Color(0, 191, 255)); // Rouge clair
+        clearButton.setBackground(new Color(178, 34, 34)); // Rouge clair
         clearButton.setBorder(new GestionExamensPanel.RoundedBorder(10)); // Bordure arrondie
         clearButton.addActionListener(new ActionListener() {
             @Override
@@ -426,10 +426,14 @@ public class GestionExamensPanel extends JPanel {
 
         public HeureField() {
             setLayout(new FlowLayout());
-
+            setBackground(Color.WHITE);
+            
             hourComboBox = new JComboBox<>();
             minuteComboBox = new JComboBox<>();
-
+            hourComboBox.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+            hourComboBox.setBackground(Color.WHITE);
+            minuteComboBox.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+            minuteComboBox.setBackground(Color.WHITE);
             // Ajouter les heures de 00 à 23 dans le JComboBox d'heures
             for (int i = 0; i < 24; i++) {
                 hourComboBox.addItem(String.format("%02d", i)); // Formatage pour avoir 2 chiffres

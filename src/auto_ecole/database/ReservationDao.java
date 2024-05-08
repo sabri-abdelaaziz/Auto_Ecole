@@ -59,6 +59,25 @@ public class ReservationDao {
         }
     }
 
+     // Méthode pour récupérer une réservation par son ID
+    public Reservation getReservationById(int reservationId) throws SQLException {
+        String query = "SELECT * FROM reservation WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, reservationId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    int eleveId = resultSet.getInt("eleve_id");
+                    int coursId = resultSet.getInt("cours_id");
+                    java.util.Date dateReservation = resultSet.getDate("date_reservation");
+                    String heureReservation = resultSet.getString("heure_reservation");
+                    return new Reservation(id, eleveId, coursId, dateReservation, heureReservation); // Retourner un objet Reservation avec les détails récupérés
+                }
+            }
+        }
+        return null; // Retourner null si aucune réservation n'est trouvée avec cet ID
+    }
+    
     // Méthode pour supprimer une réservation par ID
     public void delete(int reservationId) throws SQLException {
         String query = "DELETE FROM reservation WHERE id = ?";
