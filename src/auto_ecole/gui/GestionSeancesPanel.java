@@ -67,7 +67,7 @@ public class GestionSeancesPanel extends JPanel {
 
         // Loading and resizing the icon
 
-        ImageIcon icon = new ImageIcon("C:\\Users\\HP\\Desktop\\Projet_J2EE\\Auto_Ecole\\src\\seance.png");
+        ImageIcon icon = new ImageIcon("./src/seance.png");
 
         Image image = icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
         ImageIcon resizedIcon = new ImageIcon(image);

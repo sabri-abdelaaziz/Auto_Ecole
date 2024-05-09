@@ -53,7 +53,7 @@ public class GestionCandidatsPanel extends JPanel {
 
         // Loading and resizing the icon
 
-        ImageIcon icon = new ImageIcon("C:\\Users\\HP\\Desktop\\Projet_J2EE\\Auto_Ecole\\src\\candidat.png");
+        ImageIcon icon = new ImageIcon("./src/candidat.png");
         Image image = icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
         ImageIcon resizedIcon = new ImageIcon(image);
         JLabel iconLabel = new JLabel(resizedIcon);

@@ -20,9 +20,8 @@ public class Header extends JPanel {
         // Load your logo image
         ImageIcon logoIcon = null;
         try {
-            ImageIcon originalIcon = new ImageIcon(getClass().getResource("./src/logo_1.png"));
+            ImageIcon originalIcon = new ImageIcon("./src/logo.png");
             Image originalImage = originalIcon.getImage();
-
             
             // Scale the image
             Image scaledImage = originalImage.getScaledInstance(200, 80, Image.SCALE_SMOOTH);
@@ -30,7 +29,7 @@ public class Header extends JPanel {
             // Create ImageIcon from scaled image
             logoIcon = new ImageIcon(scaledImage);
         } catch (NullPointerException e) {
-            System.err.println("Image file not found: " + e.getMessage());
+            System.err.println("Header, Image file not found: " + e.getMessage());
         }
         logoLabel = new JLabel(logoIcon);
         add(logoLabel, BorderLayout.WEST);
