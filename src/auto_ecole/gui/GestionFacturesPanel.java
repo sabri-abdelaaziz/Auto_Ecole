@@ -129,14 +129,10 @@ public class GestionFacturesPanel extends JPanel {
 
         // Ajouter le bouton Ajouter dans le formulaire
         JButton addButton = new JButton("Ajouter");
-<<<<<<< HEAD
-        addButton.setBackground(Color.BLUE);
-=======
         addButton.setFont(new Font("Times New Roman", Font.BOLD, 14));
         addButton.setForeground(Color.WHITE);
         addButton.setBackground(new Color(178, 34, 34)); // Rouge clair
         addButton.setBorder(new GestionFacturesPanel.RoundedBorder(10));
->>>>>>> bf115c5 (Updated Page Accuiel,Facture and The Logo)
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
