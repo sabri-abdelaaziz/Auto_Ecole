@@ -83,7 +83,7 @@ public class GestionVehiculesPanel extends JPanel {
 
         JLabel addUserLabel = new JLabel("Ajouter une véhicule :");
         addUserLabel.setFont(new Font("Times New Roman", Font.BOLD, 20));
-        addUserLabel.setForeground(Color.GRAY);
+        addUserLabel.setForeground(Color.BLUE);;
         formPanel.add(addUserLabel, gbc);
 
         gbc.gridy++;

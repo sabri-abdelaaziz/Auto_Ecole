@@ -64,6 +64,7 @@ public class GestionFacturesPanel extends JPanel {
 
         // Ajouter le bouton Ajouter dans le formulaire
         JButton addButton = new JButton("Ajouter");
+        addButton.setBackground(Color.BLUE);
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

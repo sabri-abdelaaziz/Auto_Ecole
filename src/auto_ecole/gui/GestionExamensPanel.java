@@ -113,7 +113,7 @@ public class GestionExamensPanel extends JPanel {
 
         JLabel addUserLabel = new JLabel("Ajouter un examen :");
         addUserLabel.setFont(new Font("Times New Roman", Font.BOLD, 20));
-        addUserLabel.setForeground(new Color(178, 34, 34));
+        addUserLabel.setForeground(Color.BLUE);;
         formPanel.add(addUserLabel, gbc);
 
         // Composants du formulaire

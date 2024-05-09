@@ -104,7 +104,7 @@ public class GestionCoursPanel extends JPanel {
 
         JLabel addUserLabel = new JLabel("Ajouter un cours :");
         addUserLabel.setFont(new Font("Times New Roman", Font.BOLD, 20));
-        addUserLabel.setForeground(new Color(0, 191, 255));
+        addUserLabel.setForeground(Color.BLUE);
         formPanel.add(addUserLabel, gbc);
 
         gbc.gridy++;

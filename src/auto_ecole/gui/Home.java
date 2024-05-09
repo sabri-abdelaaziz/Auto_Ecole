@@ -16,8 +16,7 @@ public class Home extends JFrame implements NavBarListener {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         
-        navBar = new NavBar();
-        navBar.setNavBarListener(this);
+        navBar = new NavBar(this);
         add(navBar, BorderLayout.WEST);
 
         // Create the initial center panel
@@ -37,7 +36,7 @@ public class Home extends JFrame implements NavBarListener {
 
     // Implementing the method from NavBarListener interface
     @Override
-    public void titleClicked(String title) {
+    public void titleClicked(String title,int index) {
         try {
             JPanel newCenterPanel;
             
@@ -86,7 +85,8 @@ public class Home extends JFrame implements NavBarListener {
                    if (centerPanel != null) {
                        remove(centerPanel);
                    }
-
+                   navBar.updateButtons(index);
+System.out.println(index);
                    // Repaint and revalidate the frame
                    setCenterPanel(newCenterPanel);
                    return; // Exit the method after adding the statistics panel
@@ -97,7 +97,10 @@ public class Home extends JFrame implements NavBarListener {
                     break;
             }
             
+        
+    
             setCenterPanel(newCenterPanel);
+            
         } catch (SQLException ex) {
             Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -108,10 +111,16 @@ public class Home extends JFrame implements NavBarListener {
         if (centerPanel != null) {
             remove(centerPanel);
         }
+        System.out.println(NavBarStatique.selectedIndex);
+        navBar.updateButtons(NavBarStatique.selectedIndex);
         centerPanel = panel;
         add(centerPanel, BorderLayout.CENTER);
         revalidate();
         repaint();
+    }
+     private void updateHeader(String title) {
+        // Assuming you have a method to update the header with the clicked title
+//        ((Header) headerPanel).updateTitle(title);
     }
 
     

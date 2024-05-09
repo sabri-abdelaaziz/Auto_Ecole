@@ -120,7 +120,7 @@ public class GestionCandidatsPanel extends JPanel {
         // Create "Ajouter" button
         JButton addButton = new JButton("Ajouter");
         addButton.setFont(new Font("Times New Roman", Font.BOLD, 14));
-        addButton.setForeground(Color.WHITE);
+        addButton.setForeground(Color.BLUE);
         addButton.setBackground(new Color(178, 34, 34)); // Rouge clair
         addButton.setBorder(new RoundedBorder(10)); // Bordure arrondie
         addButton.addActionListener(new ActionListener() {
@@ -134,7 +134,7 @@ public class GestionCandidatsPanel extends JPanel {
         // Create "Effacer" button
         JButton clearButton = new JButton("Effacer");
         clearButton.setFont(new Font("Times New Roman", Font.BOLD, 14));
-        clearButton.setForeground(Color.WHITE);
+        clearButton.setForeground(Color.BLUE);
         clearButton.setBackground(new Color(178, 34, 34)); // Rouge clair
         clearButton.setBorder(new RoundedBorder(10)); // Bordure arrondie
         clearButton.addActionListener(new ActionListener() {

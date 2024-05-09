@@ -150,7 +150,7 @@ public class GestionSeancesPanel extends JPanel {
         // Create "Ajouter" button
         JButton addButton = new JButton("Ajouter");
         addButton.setFont(new Font("Times New Roman", Font.BOLD, 14));
-        addButton.setForeground(Color.WHITE);
+        addButton.setForeground(Color.BLUE);
         addButton.setBackground(Color.ORANGE); // Rouge clair
         addButton.setBorder(new GestionSeancesPanel.RoundedBorder(10)); // Bordure arrondie
         addButton.addActionListener(new ActionListener() {
